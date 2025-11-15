@@ -1,6 +1,8 @@
 extends HBoxContainer
 class_name Hand
 
+signal card_played(card_data: Resource)
+
 @export var card_scene: PackedScene
 @export var cards_to_draw: int = 3
 @export var card_spacing: float = 20.0
@@ -26,9 +28,13 @@ func draw_cards(amount: int = 3) -> void:
 
 		var card_instance = card_scene.instantiate()
 		card_instance.set_card_data(card_data)
+		card_instance.card_played.connect(_on_card_played)
 
 		add_child(card_instance)
 		cards_in_hand.append(card_instance)
+
+func _on_card_played(card_data: Resource) -> void:
+	card_played.emit(card_data)
 
 func clear_hand() -> void:
 	for card in cards_in_hand:

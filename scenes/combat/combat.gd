@@ -5,6 +5,7 @@ extends Node2D
 @onready var corruption = $Corruption
 @onready var corruption_bar: ProgressBar = $CorruptionBar
 @onready var hand = $Hand
+@onready var enemy = $Enemy
 
 # Pool de cartas disponíveis
 var card_pool: Array[Resource] = []
@@ -17,6 +18,9 @@ func _ready() -> void:
 	# Conectar signals de corrupção
 	corruption.corruption_changed.connect(_on_corruption_changed)
 	corruption.corruption_maxed.connect(_on_corruption_maxed)
+
+	# Conectar signal de carta jogada
+	hand.card_played.connect(_on_card_played)
 
 	# Atualizar UI inicial
 	_on_player_health_changed(player_health.current_health, player_health.max_health)
@@ -45,3 +49,14 @@ func _on_corruption_changed(current: float, maximum: float) -> void:
 
 func _on_corruption_maxed() -> void:
 	print("Corrupção máxima! Game Over!")
+
+func _on_card_played(card_data: Resource) -> void:
+	# Aplicar dano no inimigo
+	if card_data.damage > 0:
+		enemy.take_damage(card_data.damage)
+		print("Carta jogada: %s - Dano: %d" % [card_data.card_name, card_data.damage])
+
+	# Adicionar corrupção se houver
+	if card_data.corruption_cost > 0:
+		corruption.add_corruption(card_data.corruption_cost)
+		print("Corrupção adicionada: %d" % card_data.corruption_cost)
