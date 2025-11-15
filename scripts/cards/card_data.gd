@@ -2,9 +2,9 @@ extends Resource
 class_name CardData
 
 enum CardType {
-	ATTACK,
-	SKILL,
-	POWER
+	ATTACK,   # Cartas de dano
+	SKILL,    # Cartas de defesa/utilidade
+	POWER     # Cartas de buff/passiva
 }
 
 @export var card_name: String = ""

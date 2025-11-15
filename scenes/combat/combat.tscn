@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://6qhwol6p2ym1" path="res://scripts/systems/hand.gd" id="7_hand"]
 [ext_resource type="Script" path="res://scripts/systems/turn_manager.gd" id="8_turn"]
 [ext_resource type="Script" path="res://scripts/systems/deck.gd" id="9_deck"]
+[ext_resource type="Script" path="res://scripts/systems/player_block.gd" id="10_block"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_script")
@@ -34,6 +35,9 @@ script = ExtResource("8_turn")
 [node name="Deck" type="Node" parent="."]
 script = ExtResource("9_deck")
 
+[node name="PlayerBlock" type="Node" parent="."]
+script = ExtResource("10_block")
+
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
 offset_left = 100.0
 offset_top = 100.0
@@ -56,6 +60,14 @@ offset_right = 400.0
 offset_bottom = 260.0
 max_value = 3.0
 value = 3.0
+show_percentage = false
+
+[node name="BlockBar" type="ProgressBar" parent="."]
+offset_left = 100.0
+offset_top = 280.0
+offset_right = 400.0
+offset_bottom = 320.0
+max_value = 50.0
 show_percentage = false
 
 [node name="Enemy" parent="." instance=ExtResource("3_enemy")]

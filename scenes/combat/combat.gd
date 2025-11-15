@@ -6,6 +6,8 @@ extends Node2D
 @onready var corruption_bar: ProgressBar = $CorruptionBar
 @onready var player_energy = $PlayerEnergy
 @onready var energy_bar: ProgressBar = $EnergyBar
+@onready var player_block = $PlayerBlock
+@onready var block_bar: ProgressBar = $BlockBar
 @onready var turn_manager = $TurnManager
 @onready var deck = $Deck
 @onready var end_turn_button: Button = $EndTurnButton
@@ -30,6 +32,9 @@ func _ready() -> void:
 	# Conectar signals de energia
 	player_energy.energy_changed.connect(_on_energy_changed)
 
+	# Conectar signals de bloqueio
+	player_block.block_changed.connect(_on_block_changed)
+
 	# Conectar signals de turno
 	turn_manager.player_turn_started.connect(_on_player_turn_started)
 	turn_manager.enemy_turn_started.connect(_on_enemy_turn_started)
@@ -51,6 +56,10 @@ func _ready() -> void:
 	_on_player_health_changed(player_health.current_health, player_health.max_health)
 	_on_corruption_changed(corruption.current_corruption, corruption.max_corruption)
 	_on_energy_changed(player_energy.current_energy, player_energy.max_energy)
+	_on_block_changed(player_block.current_block)
+
+	# Configurar bloqueio no player_health
+	player_health.set_player_block(player_block)
 
 	# Inicializar deck
 	_initialize_deck()
@@ -60,13 +69,16 @@ func _ready() -> void:
 	turn_manager.initialize()
 
 func _initialize_deck() -> void:
-	# Adicionar 5x Strike, 3x Heavy Strike, 2x Devastating Blow
+	# Adicionar 5x Strike, 3x Heavy Strike, 2x Devastating Blow, 4x Defend, 1x Iron Wall
 	for i in range(5):
 		initial_deck_cards.append(load("res://resources/cards/strike.tres"))
 	for i in range(3):
 		initial_deck_cards.append(load("res://resources/cards/heavy_strike.tres"))
 	for i in range(2):
 		initial_deck_cards.append(load("res://resources/cards/devastating_blow.tres"))
+	for i in range(4):
+		initial_deck_cards.append(load("res://resources/cards/defend.tres"))
+	initial_deck_cards.append(load("res://resources/cards/iron_wall.tres"))
 
 	deck.initialize(initial_deck_cards)
 
@@ -90,7 +102,12 @@ func _on_energy_changed(current: int, maximum: int) -> void:
 	energy_bar.max_value = maximum
 	energy_bar.value = current
 
+func _on_block_changed(current: int) -> void:
+	block_bar.value = current
+
 func _on_player_turn_started() -> void:
+	# Resetar bloqueio no início do turno
+	player_block.reset_block()
 	player_energy.restore_full()
 	hand.draw_cards(3)
 	end_turn_button.disabled = false
@@ -183,6 +200,11 @@ func _on_card_played(card_data: Resource) -> void:
 	if card_data.damage > 0:
 		enemy.take_damage(card_data.damage)
 		print("Carta jogada: %s - Dano: %d - Energia gasta: %d" % [card_data.card_name, card_data.damage, card_data.energy_cost])
+
+	# Ganhar bloqueio
+	if card_data.block > 0:
+		player_block.gain_block(card_data.block)
+		print("Carta jogada: %s - Bloqueio: %d - Energia gasta: %d" % [card_data.card_name, card_data.block, card_data.energy_cost])
 
 	# Adicionar corrupção se houver
 	if card_data.corruption_cost > 0:
