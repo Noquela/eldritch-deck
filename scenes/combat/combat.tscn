@@ -46,85 +46,86 @@ script = ExtResource("11_status")
 script = ExtResource("11_status")
 
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
-offset_left = 100.0
-offset_top = 100.0
-offset_right = 400.0
-offset_bottom = 140.0
+offset_left = 120.0
+offset_top = 80.0
+offset_right = 520.0
+offset_bottom = 130.0
 value = 100.0
 show_percentage = false
 
 [node name="CorruptionBar" type="ProgressBar" parent="."]
-offset_left = 100.0
-offset_top = 160.0
-offset_right = 400.0
+offset_left = 120.0
+offset_top = 150.0
+offset_right = 520.0
 offset_bottom = 200.0
 show_percentage = false
 
 [node name="EnergyBar" type="ProgressBar" parent="."]
-offset_left = 100.0
+offset_left = 120.0
 offset_top = 220.0
-offset_right = 400.0
-offset_bottom = 260.0
+offset_right = 520.0
+offset_bottom = 270.0
 max_value = 3.0
 value = 3.0
 show_percentage = false
 
 [node name="BlockBar" type="ProgressBar" parent="."]
-offset_left = 100.0
-offset_top = 280.0
-offset_right = 400.0
-offset_bottom = 320.0
+offset_left = 120.0
+offset_top = 290.0
+offset_right = 520.0
+offset_bottom = 340.0
 max_value = 50.0
 show_percentage = false
 
 [node name="PlayerStatusLabel" type="Label" parent="."]
-offset_left = 100.0
-offset_top = 340.0
-offset_right = 400.0
-offset_bottom = 400.0
+offset_left = 120.0
+offset_top = 360.0
+offset_right = 520.0
+offset_bottom = 420.0
 theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
 [node name="EnemyStatusLabel" type="Label" parent="."]
-offset_left = 1520.0
-offset_top = 340.0
-offset_right = 1920.0
-offset_bottom = 400.0
+offset_left = 2920.0
+offset_top = 360.0
+offset_right = 3320.0
+offset_bottom = 420.0
 theme_override_font_sizes/font_size = 20
 text = ""
 vertical_alignment = 1
 
 [node name="Enemy" parent="." instance=ExtResource("3_enemy")]
-position = Vector2(1720, 500)
+position = Vector2(2600, 450)
 
 [node name="EndTurnButton" type="Button" parent="."]
-offset_left = 3100.0
-offset_top = 1300.0
-offset_right = 3320.0
-offset_bottom = 1380.0
+offset_left = 2950.0
+offset_top = 1250.0
+offset_right = 3280.0
+offset_bottom = 1360.0
+theme_override_font_sizes/font_size = 32
 text = "End Turn"
 
 [node name="Hand" type="HBoxContainer" parent="."]
-offset_left = 920.0
-offset_top = 1050.0
-offset_right = 2520.0
+offset_left = 620.0
+offset_top = 1000.0
+offset_right = 2820.0
 offset_bottom = 1380.0
 script = ExtResource("7_hand")
 card_scene = ExtResource("5_card")
 
 [node name="GameOverPanel" type="Panel" parent="."]
 visible = false
-offset_left = 1070.0
+offset_left = 1220.0
 offset_top = 520.0
-offset_right = 2370.0
+offset_right = 2220.0
 offset_bottom = 920.0
 
 [node name="GameOverLabel" type="Label" parent="GameOverPanel"]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 50.0
-offset_right = 1250.0
+offset_right = 950.0
 offset_bottom = 150.0
 theme_override_font_sizes/font_size = 64
 text = "VITÓRIA!"
@@ -133,8 +134,8 @@ vertical_alignment = 1
 
 [node name="RestartButton" type="Button" parent="GameOverPanel"]
 layout_mode = 0
-offset_left = 450.0
+offset_left = 300.0
 offset_top = 250.0
-offset_right = 850.0
+offset_right = 700.0
 offset_bottom = 330.0
 text = "Jogar Novamente"
