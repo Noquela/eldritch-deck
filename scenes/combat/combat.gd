@@ -7,12 +7,13 @@ extends Node2D
 @onready var player_energy = $PlayerEnergy
 @onready var energy_bar: ProgressBar = $EnergyBar
 @onready var turn_manager = $TurnManager
+@onready var deck = $Deck
 @onready var end_turn_button: Button = $EndTurnButton
 @onready var hand = $Hand
 @onready var enemy = $Enemy
 
-# Pool de cartas disponíveis
-var card_pool: Array[Resource] = []
+# Pool de cartas iniciais para o deck
+var initial_deck_cards: Array[Resource] = []
 
 func _ready() -> void:
 	# Conectar signals de vida
@@ -42,17 +43,23 @@ func _ready() -> void:
 	_on_corruption_changed(corruption.current_corruption, corruption.max_corruption)
 	_on_energy_changed(player_energy.current_energy, player_energy.max_energy)
 
-	# Inicializar pool de cartas
-	_initialize_card_pool()
-	hand.set_card_pool(card_pool)
+	# Inicializar deck
+	_initialize_deck()
+	hand.set_deck(deck)
 
 	# Iniciar o primeiro turno
 	turn_manager.initialize()
 
-func _initialize_card_pool() -> void:
-	card_pool.append(load("res://resources/cards/strike.tres"))
-	card_pool.append(load("res://resources/cards/heavy_strike.tres"))
-	card_pool.append(load("res://resources/cards/devastating_blow.tres"))
+func _initialize_deck() -> void:
+	# Adicionar 5x Strike, 3x Heavy Strike, 2x Devastating Blow
+	for i in range(5):
+		initial_deck_cards.append(load("res://resources/cards/strike.tres"))
+	for i in range(3):
+		initial_deck_cards.append(load("res://resources/cards/heavy_strike.tres"))
+	for i in range(2):
+		initial_deck_cards.append(load("res://resources/cards/devastating_blow.tres"))
+
+	deck.initialize(initial_deck_cards)
 
 func _on_player_health_changed(current: int, maximum: int) -> void:
 	health_bar.max_value = maximum
@@ -83,7 +90,7 @@ func _on_player_turn_started() -> void:
 
 func _on_enemy_turn_started() -> void:
 	end_turn_button.disabled = true
-	hand.clear_hand()
+	hand.discard_hand()
 	# Aguardar 1 segundo antes do inimigo agir
 	await get_tree().create_timer(1.0).timeout
 	_enemy_take_action()
