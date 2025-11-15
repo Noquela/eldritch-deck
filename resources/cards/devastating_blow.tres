@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/cards/card_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+card_name = "Devastating Blow"
+card_type = 0
+energy_cost = 3
+description = "Deal 12 damage"
+corruption_cost = 2
+damage = 12
+block = 0
