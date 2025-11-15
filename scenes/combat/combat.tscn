@@ -7,3 +7,11 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 1)
+
+[node name="PlayerHealth" type="Node" parent="."]
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="."]
+offset_right = 4.0
+offset_bottom = 27.0
+value = 100.0
+show_percentage = false
