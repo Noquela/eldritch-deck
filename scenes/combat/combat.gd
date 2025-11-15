@@ -6,6 +6,8 @@ extends Node2D
 @onready var corruption_bar: ProgressBar = $CorruptionBar
 @onready var player_energy = $PlayerEnergy
 @onready var energy_bar: ProgressBar = $EnergyBar
+@onready var turn_manager = $TurnManager
+@onready var end_turn_button: Button = $EndTurnButton
 @onready var hand = $Hand
 @onready var enemy = $Enemy
 
@@ -24,6 +26,14 @@ func _ready() -> void:
 	# Conectar signals de energia
 	player_energy.energy_changed.connect(_on_energy_changed)
 
+	# Conectar signals de turno
+	turn_manager.player_turn_started.connect(_on_player_turn_started)
+	turn_manager.enemy_turn_started.connect(_on_enemy_turn_started)
+	turn_manager.enemy_turn_ended.connect(_on_enemy_turn_ended)
+
+	# Conectar botão de End Turn
+	end_turn_button.pressed.connect(_on_end_turn_pressed)
+
 	# Conectar signal de carta jogada
 	hand.card_played.connect(_on_card_played)
 
@@ -32,10 +42,9 @@ func _ready() -> void:
 	_on_corruption_changed(corruption.current_corruption, corruption.max_corruption)
 	_on_energy_changed(player_energy.current_energy, player_energy.max_energy)
 
-	# Inicializar pool de cartas e comprar mão inicial
+	# Inicializar pool de cartas
 	_initialize_card_pool()
 	hand.set_card_pool(card_pool)
-	hand.draw_cards(3)
 
 func _initialize_card_pool() -> void:
 	card_pool.append(load("res://resources/cards/strike.tres"))
@@ -60,7 +69,40 @@ func _on_energy_changed(current: int, maximum: int) -> void:
 	energy_bar.max_value = maximum
 	energy_bar.value = current
 
+func _on_player_turn_started() -> void:
+	player_energy.restore_full()
+	hand.draw_cards(3)
+	end_turn_button.disabled = false
+
+func _on_enemy_turn_started() -> void:
+	end_turn_button.disabled = true
+	hand.clear_hand()
+	# Aguardar 1 segundo antes do inimigo agir
+	await get_tree().create_timer(1.0).timeout
+	_enemy_take_action()
+
+func _on_enemy_turn_ended() -> void:
+	pass
+
+func _enemy_take_action() -> void:
+	# Por enquanto, inimigo só ataca
+	var damage = 5
+	player_health.take_damage(damage)
+	print("Inimigo atacou causando %d de dano!" % damage)
+
+	# Aguardar 1 segundo antes de terminar o turno
+	await get_tree().create_timer(1.0).timeout
+	turn_manager.end_enemy_turn()
+
+func _on_end_turn_pressed() -> void:
+	turn_manager.end_player_turn()
+
 func _on_card_played(card_data: Resource) -> void:
+	# Verificar se é turno do jogador
+	if not turn_manager.is_player_turn():
+		print("Não é seu turno!")
+		return
+
 	# Verificar se tem energia suficiente
 	if not player_energy.has_energy(card_data.energy_cost):
 		print("Energia insuficiente!")
