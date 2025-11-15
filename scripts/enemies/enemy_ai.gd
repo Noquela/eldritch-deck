@@ -1,15 +1,46 @@
 extends Node
 class_name EnemyAI
 
-enum ActionType { ATTACK, DEFEND, SPECIAL }
+enum ActionType { ATTACK, DEFEND, BUFF }
 
-var actions: Array[Dictionary] = [
-	{"type": ActionType.ATTACK, "name": "Ataque Fraco", "damage": 5, "weight": 50},
-	{"type": ActionType.ATTACK, "name": "Ataque Forte", "damage": 10, "weight": 30},
-	{"type": ActionType.DEFEND, "name": "Defender", "block": 8, "weight": 20},
-]
-
+var enemy_data: Resource = null
+var actions: Array[Dictionary] = []
 var next_action: Dictionary = {}
+
+func set_enemy_data(data: Resource) -> void:
+	enemy_data = data
+	_build_actions()
+
+func _build_actions() -> void:
+	if not enemy_data:
+		return
+
+	actions.clear()
+
+	# Ação de ataque
+	actions.append({
+		"type": ActionType.ATTACK,
+		"name": "Ataque",
+		"damage": randi_range(enemy_data.min_damage, enemy_data.max_damage),
+		"weight": enemy_data.attack_weight
+	})
+
+	# Ação de defesa
+	actions.append({
+		"type": ActionType.DEFEND,
+		"name": "Defender",
+		"block": enemy_data.block_amount,
+		"weight": enemy_data.defend_weight
+	})
+
+	# Ação de buff (se disponível)
+	if enemy_data.can_apply_strength:
+		actions.append({
+			"type": ActionType.BUFF,
+			"name": "Fortalecer",
+			"strength": enemy_data.strength_amount,
+			"weight": enemy_data.buff_weight
+		})
 
 func choose_next_action() -> Dictionary:
 	# Escolher ação baseada em peso
@@ -41,5 +72,7 @@ func get_action_description() -> String:
 			return "Ataque: %d" % next_action.damage
 		ActionType.DEFEND:
 			return "Defesa: %d" % next_action.block
+		ActionType.BUFF:
+			return "Força +%d" % next_action.strength
 		_:
 			return next_action.name

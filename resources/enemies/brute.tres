@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+enemy_name = "Brutamontes"
+max_health = 60
+min_damage = 8
+max_damage = 14
+block_amount = 10
+attack_weight = 80
+defend_weight = 15
+buff_weight = 5
+can_apply_strength = true
+strength_amount = 2

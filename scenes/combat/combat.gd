@@ -24,6 +24,13 @@ extends Node2D
 # Pool de cartas iniciais para o deck
 var initial_deck_cards: Array[Resource] = []
 
+# Pool de tipos de inimigos
+var enemy_types: Array[Resource] = [
+	preload("res://resources/enemies/cultist.tres"),
+	preload("res://resources/enemies/brute.tres"),
+	preload("res://resources/enemies/defender.tres")
+]
+
 func _ready() -> void:
 	# Conectar signals de vida
 	player_health.health_changed.connect(_on_player_health_changed)
@@ -80,8 +87,17 @@ func _ready() -> void:
 	_initialize_deck()
 	hand.set_deck(deck)
 
+	# Inicializar inimigo aleatório
+	_spawn_random_enemy()
+
 	# Iniciar o primeiro turno
 	turn_manager.initialize()
+
+func _spawn_random_enemy() -> void:
+	# Escolher tipo de inimigo aleatório
+	var random_enemy_data = enemy_types[randi() % enemy_types.size()]
+	enemy.initialize_from_data(random_enemy_data)
+	print("Inimigo spawnou: %s (HP: %d)" % [random_enemy_data.enemy_name, random_enemy_data.max_health])
 
 func _initialize_deck() -> void:
 	# Ataques: 5x Strike, 2x Heavy Strike, 1x Devastating Blow, 1x Desperate Strike
@@ -200,6 +216,10 @@ func _enemy_take_action() -> void:
 		1: # ActionType.DEFEND
 			var block = action.block
 			print("Inimigo usou %s ganhando %d de bloqueio!" % [action.name, block])
+		2: # ActionType.BUFF
+			var strength = action.strength
+			enemy_status_manager.apply_status(StatusEffect.EffectType.STRENGTH, strength, -1)
+			print("Inimigo usou %s ganhando %d de Força!" % [action.name, strength])
 		_:
 			print("Inimigo usou %s!" % action.name)
 

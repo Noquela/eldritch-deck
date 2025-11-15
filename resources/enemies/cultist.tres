@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+enemy_name = "Cultista"
+max_health = 40
+min_damage = 4
+max_damage = 8
+block_amount = 6
+attack_weight = 70
+defend_weight = 20
+buff_weight = 10
+can_apply_strength = false
+strength_amount = 0

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+enemy_name = "Guardião"
+max_health = 50
+min_damage = 5
+max_damage = 9
+block_amount = 12
+attack_weight = 40
+defend_weight = 50
+buff_weight = 10
+can_apply_strength = false
+strength_amount = 0
