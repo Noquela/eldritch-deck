@@ -11,6 +11,9 @@ extends Node2D
 @onready var end_turn_button: Button = $EndTurnButton
 @onready var hand = $Hand
 @onready var enemy = $Enemy
+@onready var game_over_panel: Panel = $GameOverPanel
+@onready var game_over_label: Label = $GameOverPanel/GameOverLabel
+@onready var restart_button: Button = $GameOverPanel/RestartButton
 
 # Pool de cartas iniciais para o deck
 var initial_deck_cards: Array[Resource] = []
@@ -32,8 +35,14 @@ func _ready() -> void:
 	turn_manager.enemy_turn_started.connect(_on_enemy_turn_started)
 	turn_manager.enemy_turn_ended.connect(_on_enemy_turn_ended)
 
+	# Conectar signals do inimigo
+	enemy.enemy_died.connect(_on_enemy_died)
+
 	# Conectar botão de End Turn
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
+
+	# Conectar botão de Restart
+	restart_button.pressed.connect(_on_restart_pressed)
 
 	# Conectar signal de carta jogada
 	hand.card_played.connect(_on_card_played)
@@ -67,6 +76,7 @@ func _on_player_health_changed(current: int, maximum: int) -> void:
 
 func _on_player_died() -> void:
 	print("Player morreu!")
+	_show_game_over(false)
 
 func _on_corruption_changed(current: float, maximum: float) -> void:
 	corruption_bar.max_value = maximum
@@ -74,6 +84,7 @@ func _on_corruption_changed(current: float, maximum: float) -> void:
 
 func _on_corruption_maxed() -> void:
 	print("Corrupção máxima! Game Over!")
+	_show_game_over(false)
 
 func _on_energy_changed(current: int, maximum: int) -> void:
 	energy_bar.max_value = maximum
@@ -123,6 +134,24 @@ func _enemy_take_action() -> void:
 
 func _on_end_turn_pressed() -> void:
 	turn_manager.end_player_turn()
+
+func _on_enemy_died() -> void:
+	print("Inimigo morreu! Vitória!")
+	_show_game_over(true)
+
+func _show_game_over(victory: bool) -> void:
+	game_over_panel.visible = true
+	end_turn_button.disabled = true
+
+	if victory:
+		game_over_label.text = "VITÓRIA!"
+		game_over_label.add_theme_color_override("font_color", Color(0.2, 0.8, 0.2))
+	else:
+		game_over_label.text = "DERROTA!"
+		game_over_label.add_theme_color_override("font_color", Color(0.8, 0.2, 0.2))
+
+func _on_restart_pressed() -> void:
+	get_tree().reload_current_scene()
 
 func _on_card_played(card_data: Resource) -> void:
 	# Verificar se é turno do jogador
