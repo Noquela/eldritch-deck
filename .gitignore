@@ -1,0 +1,52 @@
+# Godot 4+ specific ignores
+.godot/
+.import/
+export.cfg
+export_presets.cfg
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# System/tool-specific ignores
+.DS_Store
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# Build artifacts
+*.o
+*.os
+*.so
+*.pyc
+*.pyo
+__pycache__/
+
+# IDE specific
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Art source files (mantém apenas os exports)
+*.kra
+*.xcf
+*.psd
+*.ai
+
+# Generated art (stable diffusion outputs)
+generated_art/*.png
+generated_art/*.jpg
+!generated_art/.gitkeep
+
+# Database
+memory.sqlite
+memory.sqlite-shm
+memory.sqlite-wal
