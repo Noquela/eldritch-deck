@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Expose"
-description = "Cause 6 de dano. Aplique 2 de Vulnerável"
+card_name = "Revelar Fraqueza"
+description = "Causa 6 de dano. Aplique 2 de Vulnerável.\n\"Você enxerga além da carne mortal.\""
 energy_cost = 1
 damage = 6
 block = 0

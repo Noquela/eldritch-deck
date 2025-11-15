@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Flex"
-description = "Ganhe 2 de Força"
+card_name = "Poder Eldritch"
+description = "Ganhe 2 de Força.\n\"Energia cósmica flui por suas veias.\""
 energy_cost = 0
 damage = 0
 block = 0

@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Strike"
+card_name = "Toque das Sombras"
 card_type = 0
 energy_cost = 1
-description = "Deal 5 damage"
+description = "Causa 5 de dano.\n\"As trevas respondem ao seu chamado.\""
 corruption_cost = 0
 damage = 5
 block = 0

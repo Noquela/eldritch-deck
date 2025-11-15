@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Defend"
-description = "Ganhe 5 de bloqueio"
+card_name = "Véu Protetor"
+description = "Ganhe 5 de bloqueio.\n\"Uma barreira entre você e o desconhecido.\""
 energy_cost = 1
 damage = 0
 block = 5

@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Desperate Strike"
-description = "Cause 18 de dano. Exhaust."
+card_name = "Desespero Profundo"
+description = "Causa 18 de dano. Exhaust.\n\"Quando tudo está perdido, o horror se torna força.\""
 energy_cost = 2
 damage = 18
 block = 0

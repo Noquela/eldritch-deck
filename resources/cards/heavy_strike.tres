@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Heavy Strike"
+card_name = "Garra do Abismo"
 card_type = 0
 energy_cost = 2
-description = "Deal 8 damage"
+description = "Causa 8 de dano.\n\"Algo além do véu estende suas garras.\""
 corruption_cost = 1
 damage = 8
 block = 0

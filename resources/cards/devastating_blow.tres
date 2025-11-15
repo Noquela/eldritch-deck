@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_1")
-card_name = "Devastating Blow"
+card_name = "Fúria de Azathoth"
 card_type = 0
 energy_cost = 3
-description = "Deal 12 damage"
+description = "Causa 12 de dano.\n\"O caos primordial se manifesta.\""
 corruption_cost = 2
 damage = 12
 block = 0
