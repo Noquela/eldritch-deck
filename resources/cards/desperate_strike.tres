@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/cards/card_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+card_name = "Desperate Strike"
+description = "Cause 18 de dano. Exhaust."
+energy_cost = 2
+damage = 18
+block = 0
+draw_cards = 0
+heal = 0
+energy_gain = 0
+corruption_cost = 1
+card_type = 1
+effect_name = ""
+effect_value = 0
+is_exhaust = true

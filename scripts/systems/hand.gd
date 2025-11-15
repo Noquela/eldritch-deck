@@ -57,9 +57,12 @@ func clear_hand() -> void:
 		card.queue_free()
 	cards_in_hand.clear()
 
-func remove_card(card) -> void:
+func remove_card(card, exhaust: bool = false) -> void:
 	if card in cards_in_hand:
 		cards_in_hand.erase(card)
 		if deck and card.card_data:
-			deck.discard_card(card.card_data)
+			if exhaust:
+				deck.exhaust_card(card.card_data)
+			else:
+				deck.discard_card(card.card_data)
 		card.queue_free()

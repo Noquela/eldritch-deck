@@ -69,16 +69,25 @@ func _ready() -> void:
 	turn_manager.initialize()
 
 func _initialize_deck() -> void:
-	# Adicionar 5x Strike, 3x Heavy Strike, 2x Devastating Blow, 4x Defend, 1x Iron Wall
+	# Ataques: 5x Strike, 2x Heavy Strike, 1x Devastating Blow, 1x Desperate Strike
 	for i in range(5):
 		initial_deck_cards.append(load("res://resources/cards/strike.tres"))
-	for i in range(3):
-		initial_deck_cards.append(load("res://resources/cards/heavy_strike.tres"))
 	for i in range(2):
-		initial_deck_cards.append(load("res://resources/cards/devastating_blow.tres"))
-	for i in range(4):
+		initial_deck_cards.append(load("res://resources/cards/heavy_strike.tres"))
+	initial_deck_cards.append(load("res://resources/cards/devastating_blow.tres"))
+	initial_deck_cards.append(load("res://resources/cards/desperate_strike.tres"))
+
+	# Defesa: 3x Defend, 1x Iron Wall
+	for i in range(3):
 		initial_deck_cards.append(load("res://resources/cards/defend.tres"))
 	initial_deck_cards.append(load("res://resources/cards/iron_wall.tres"))
+
+	# Skills: 1x Bandage, 1x Insight
+	initial_deck_cards.append(load("res://resources/cards/bandage.tres"))
+	initial_deck_cards.append(load("res://resources/cards/insight.tres"))
+
+	# Powers: 1x Offering
+	initial_deck_cards.append(load("res://resources/cards/offering.tres"))
 
 	deck.initialize(initial_deck_cards)
 
@@ -186,7 +195,7 @@ func _on_card_played(card_data: Resource) -> void:
 		print("Falha ao gastar energia!")
 		return
 
-	# Remover a carta da mão
+	# Remover a carta da mão (exhaust se necessário)
 	var card_to_remove = null
 	for card in hand.cards_in_hand:
 		if card.card_data == card_data:
@@ -194,7 +203,7 @@ func _on_card_played(card_data: Resource) -> void:
 			break
 
 	if card_to_remove:
-		hand.remove_card(card_to_remove)
+		hand.remove_card(card_to_remove, card_data.is_exhaust)
 
 	# Aplicar dano no inimigo
 	if card_data.damage > 0:
@@ -205,6 +214,27 @@ func _on_card_played(card_data: Resource) -> void:
 	if card_data.block > 0:
 		player_block.gain_block(card_data.block)
 		print("Carta jogada: %s - Bloqueio: %d - Energia gasta: %d" % [card_data.card_name, card_data.block, card_data.energy_cost])
+
+	# Curar vida
+	if card_data.heal > 0:
+		player_health.heal(card_data.heal)
+		print("Carta jogada: %s - Cura: %d - Energia gasta: %d" % [card_data.card_name, card_data.heal, card_data.energy_cost])
+
+	# Comprar cartas
+	if card_data.draw_cards > 0:
+		hand.draw_cards(card_data.draw_cards)
+		print("Carta jogada: %s - Comprou %d cartas - Energia gasta: %d" % [card_data.card_name, card_data.draw_cards, card_data.energy_cost])
+
+	# Ganhar energia
+	if card_data.energy_gain > 0:
+		player_energy.current_energy += card_data.energy_gain
+		player_energy.energy_changed.emit(player_energy.current_energy, player_energy.max_energy)
+		print("Carta jogada: %s - Ganhou %d energia - Energia gasta: %d" % [card_data.card_name, card_data.energy_gain, card_data.energy_cost])
+
+	# Efeitos especiais
+	if card_data.effect_name == "self_damage":
+		player_health.take_damage(card_data.effect_value)
+		print("Efeito: Sofreu %d de dano" % card_data.effect_value)
 
 	# Adicionar corrupção se houver
 	if card_data.corruption_cost > 0:

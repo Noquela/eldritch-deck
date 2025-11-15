@@ -7,6 +7,7 @@ signal deck_empty
 
 var draw_pile: Array[Resource] = []
 var discard_pile: Array[Resource] = []
+var exhaust_pile: Array[Resource] = []  # Cartas removidas permanentemente
 var initial_cards: Array[Resource] = []
 
 func initialize(cards: Array[Resource]) -> void:
@@ -44,8 +45,15 @@ func draw_card() -> Resource:
 func discard_card(card_data: Resource) -> void:
 	discard_pile.append(card_data)
 
+func exhaust_card(card_data: Resource) -> void:
+	exhaust_pile.append(card_data)
+	print("Carta exhausted: %s" % card_data.card_name)
+
 func get_draw_pile_count() -> int:
 	return draw_pile.size()
 
 func get_discard_pile_count() -> int:
 	return discard_pile.size()
+
+func get_exhaust_pile_count() -> int:
+	return exhaust_pile.size()
