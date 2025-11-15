@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/cards/card_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+card_name = "Ritual da Loucura"
+card_type = 3
+energy_cost = 1
+description = "RITUAL (2 turnos): Causa 3 de dano por turno. Ao completar: ganhe 4 de Força."
+corruption_cost = 3
+damage = 0
+block = 0
+draw_cards = 0
+heal = 0
+energy_gain = 0
+effect_name = ""
+effect_value = 0
+is_exhaust = true
+is_ritual = true
+ritual_turns = 2
+ritual_damage_per_turn = 3
+ritual_final_damage = 0
+ritual_final_effect = "gain_strength_4"
+apply_player_status = ""
+apply_player_stacks = 0
+apply_player_duration = -1
+apply_enemy_status = ""
+apply_enemy_stacks = 0
+apply_enemy_duration = -1

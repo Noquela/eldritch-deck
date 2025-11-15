@@ -363,6 +363,19 @@ func _on_card_played(card_data: Resource) -> void:
 		player_health.take_damage(card_data.effect_value)
 		print("Efeito: Sofreu %d de dano" % card_data.effect_value)
 
+	# CARTA ESPECIAL: Golpe do Vazio (dano = Corrupção atual)
+	if card_data.effect_name == "damage_equals_corruption":
+		var corruption_damage = int(corruption.current_corruption)
+		if corruption_damage > 0 and is_instance_valid(enemy):
+			var final_damage = _calculate_player_damage(corruption_damage)
+			enemy.take_damage(final_damage)
+			print("💀 Golpe do Vazio: Corrupção %d → Dano %d" % [corruption_damage, final_damage])
+
+	# CARTA ESPECIAL: Drenar Sanidade (perde sanidade máxima)
+	if card_data.effect_name == "lose_max_sanity_2":
+		player_sanity.lose_max_sanity(card_data.effect_value)
+		print("🧠 Perdeu %d de Sanidade máxima" % card_data.effect_value)
+
 	# Aplicar status effects no jogador
 	if card_data.apply_player_status != "" and card_data.apply_player_stacks > 0:
 		var effect_type = _get_effect_type_from_string(card_data.apply_player_status)
