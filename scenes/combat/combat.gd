@@ -237,6 +237,15 @@ func _on_restart_pressed() -> void:
 func _calculate_player_damage(base_damage: int) -> int:
 	var damage = base_damage
 
+	# MECÂNICA LOVECRAFTIANA: Corrupção aumenta poder!
+	# Cada ponto de Corrupção = +1% de dano
+	# Exemplo: 50 de Corrupção = +50% de dano!
+	var corruption_percentage = corruption.current_corruption
+	if corruption_percentage > 0:
+		var bonus_damage = int(base_damage * (corruption_percentage / 100.0))
+		damage += bonus_damage
+		print("⚠ CORRUPÇÃO %.0f - Bônus: +%d dano (%d → %d)" % [corruption_percentage, bonus_damage, base_damage, damage])
+
 	# Aplicar STRENGTH (aumenta dano)
 	var strength = player_status_manager.get_status_stacks(StatusEffect.EffectType.STRENGTH)
 	if strength > 0:
@@ -251,6 +260,22 @@ func _calculate_player_damage(base_damage: int) -> int:
 		print("Fraqueza -%d (%d stacks): %d → %d" % [reduction, weakness, base_damage + strength, damage])
 
 	return damage
+
+func _calculate_player_block(base_block: int) -> int:
+	var block = base_block
+
+	# MECÂNICA LOVECRAFTIANA: Corrupção aumenta bloqueio também!
+	# Cada ponto de Corrupção = +1% de bloqueio
+	# Exemplo: 50 de Corrupção = +50% de bloqueio!
+	var corruption_percentage = corruption.current_corruption
+	if corruption_percentage > 0:
+		var bonus_block = int(base_block * (corruption_percentage / 100.0))
+		block += bonus_block
+		print("⚠ CORRUPÇÃO %.0f - Bônus: +%d bloqueio (%d → %d)" % [corruption_percentage, bonus_block, base_block, block])
+
+	# TODO: Adicionar outros modificadores de bloqueio (ex: Dexterity)
+
+	return block
 
 func _get_effect_type_from_string(effect_string: String):
 	match effect_string.to_upper():
@@ -296,16 +321,17 @@ func _on_card_played(card_data: Resource) -> void:
 	if card_to_remove:
 		hand.remove_card(card_to_remove, card_data.is_exhaust)
 
-	# Aplicar dano no inimigo
-	if card_data.damage > 0:
+	# Aplicar dano no inimigo (verificar se ainda existe)
+	if card_data.damage > 0 and is_instance_valid(enemy):
 		var final_damage = _calculate_player_damage(card_data.damage)
 		enemy.take_damage(final_damage)
 		print("Carta jogada: %s - Dano base: %d - Dano final: %d - Energia gasta: %d" % [card_data.card_name, card_data.damage, final_damage, card_data.energy_cost])
 
-	# Ganhar bloqueio
+	# Ganhar bloqueio (com bônus de Corrupção!)
 	if card_data.block > 0:
-		player_block.gain_block(card_data.block)
-		print("Carta jogada: %s - Bloqueio: %d - Energia gasta: %d" % [card_data.card_name, card_data.block, card_data.energy_cost])
+		var final_block = _calculate_player_block(card_data.block)
+		player_block.gain_block(final_block)
+		print("Carta jogada: %s - Bloqueio base: %d - Bloqueio final: %d - Energia gasta: %d" % [card_data.card_name, card_data.block, final_block, card_data.energy_cost])
 
 	# Curar vida
 	if card_data.heal > 0:
