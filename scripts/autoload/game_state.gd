@@ -46,6 +46,9 @@ func _initialize_starting_deck() -> void:
 	player_deck.append(load("res://resources/cards/offering.tres"))
 	player_deck.append(load("res://resources/cards/flex.tres"))
 
+	# RITUAIS LOVECRAFTIANOS: 1x Invocar Yog-Sothoth
+	player_deck.append(load("res://resources/cards/summon_yog_sothoth.tres"))
+
 	deck_changed.emit()
 
 func add_card_to_deck(card: Resource) -> void:

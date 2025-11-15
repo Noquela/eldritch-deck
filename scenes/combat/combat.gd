@@ -10,6 +10,7 @@ extends Node2D
 @onready var block_bar: ProgressBar = $BlockBar
 @onready var player_status_manager = $PlayerStatusManager
 @onready var enemy_status_manager = $EnemyStatusManager
+@onready var ritual_manager = $RitualManager
 @onready var turn_manager = $TurnManager
 @onready var deck = $Deck
 @onready var end_turn_button: Button = $EndTurnButton
@@ -162,6 +163,9 @@ func _on_player_turn_started() -> void:
 
 	# Reduzir duração dos status effects do jogador
 	player_status_manager.reduce_all_durations()
+
+	# MECÂNICA LOVECRAFTIANA: Progredir rituais ativos!
+	ritual_manager.progress_rituals(enemy)
 
 	hand.draw_cards(3)
 	end_turn_button.disabled = false
@@ -320,6 +324,12 @@ func _on_card_played(card_data: Resource) -> void:
 
 	if card_to_remove:
 		hand.remove_card(card_to_remove, card_data.is_exhaust)
+
+	# MECÂNICA LOVECRAFTIANA: Iniciar ritual se for carta de ritual!
+	if card_data.is_ritual:
+		ritual_manager.start_ritual(card_data)
+		# Rituais não aplicam efeitos imediatamente, apenas iniciam
+		return
 
 	# Aplicar dano no inimigo (verificar se ainda existe)
 	if card_data.damage > 0 and is_instance_valid(enemy):

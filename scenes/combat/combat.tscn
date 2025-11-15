@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://kc4dm5vycqg4" path="res://scripts/systems/deck.gd" id="9_deck"]
 [ext_resource type="Script" uid="uid://crj2llxvghmlq" path="res://scripts/systems/player_block.gd" id="10_block"]
 [ext_resource type="Script" uid="uid://bnq7woudbk14w" path="res://scripts/systems/status_manager.gd" id="11_status"]
+[ext_resource type="Script" path="res://scripts/systems/ritual_manager.gd" id="12_ritual"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_script")
@@ -46,6 +47,9 @@ script = ExtResource("11_status")
 
 [node name="EnemyStatusManager" type="Node" parent="."]
 script = ExtResource("11_status")
+
+[node name="RitualManager" type="Node" parent="."]
+script = ExtResource("12_ritual")
 
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
 offset_left = 120.0

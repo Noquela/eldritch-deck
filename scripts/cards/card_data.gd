@@ -4,7 +4,8 @@ class_name CardData
 enum CardType {
 	ATTACK,   # Cartas de dano
 	SKILL,    # Cartas de defesa/utilidade
-	POWER     # Cartas de buff/passiva
+	POWER,    # Cartas de buff/passiva
+	RITUAL    # NOVO: Cartas de múltiplos turnos (Lovecraftiano!)
 }
 
 @export var card_name: String = ""
@@ -24,6 +25,13 @@ enum CardType {
 @export var effect_name: String = ""  # Nome do efeito único
 @export var effect_value: int = 0  # Valor do efeito
 @export var is_exhaust: bool = false  # Carta some após jogar
+
+# RITUAIS: Sistema de múltiplos turnos (mecânica Lovecraftiana!)
+@export var is_ritual: bool = false  # Se é um ritual
+@export var ritual_turns: int = 0  # Turnos necessários para completar (ex: 3)
+@export var ritual_damage_per_turn: int = 0  # Dano por turno durante ritual
+@export var ritual_final_damage: int = 0  # Dano ao completar ritual
+@export var ritual_final_effect: String = ""  # Efeito especial ao completar
 
 # Status effects (buffs/debuffs)
 @export var apply_player_status: String = ""  # Status effect para jogador (ex: "STRENGTH")
