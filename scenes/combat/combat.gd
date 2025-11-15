@@ -4,6 +4,10 @@ extends Node2D
 @onready var health_bar: ProgressBar = $PlayerHealthBar
 @onready var corruption = $Corruption
 @onready var corruption_bar: ProgressBar = $CorruptionBar
+@onready var hand = $Hand
+
+# Pool de cartas disponíveis
+var card_pool: Array[Resource] = []
 
 func _ready() -> void:
 	# Conectar signals de vida
@@ -17,6 +21,16 @@ func _ready() -> void:
 	# Atualizar UI inicial
 	_on_player_health_changed(player_health.current_health, player_health.max_health)
 	_on_corruption_changed(corruption.current_corruption, corruption.max_corruption)
+
+	# Inicializar pool de cartas e comprar mão inicial
+	_initialize_card_pool()
+	hand.set_card_pool(card_pool)
+	hand.draw_cards(3)
+
+func _initialize_card_pool() -> void:
+	card_pool.append(load("res://resources/cards/strike.tres"))
+	card_pool.append(load("res://resources/cards/heavy_strike.tres"))
+	card_pool.append(load("res://resources/cards/devastating_blow.tres"))
 
 func _on_player_health_changed(current: int, maximum: int) -> void:
 	health_bar.max_value = maximum
