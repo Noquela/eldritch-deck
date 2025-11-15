@@ -13,6 +13,9 @@ var current_turn: Turn = Turn.PLAYER
 var turn_number: int = 1
 
 func _ready() -> void:
+	pass
+
+func initialize() -> void:
 	start_player_turn()
 
 func start_player_turn() -> void:

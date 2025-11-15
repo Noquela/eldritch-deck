@@ -46,6 +46,9 @@ func _ready() -> void:
 	_initialize_card_pool()
 	hand.set_card_pool(card_pool)
 
+	# Iniciar o primeiro turno
+	turn_manager.initialize()
+
 func _initialize_card_pool() -> void:
 	card_pool.append(load("res://resources/cards/strike.tres"))
 	card_pool.append(load("res://resources/cards/heavy_strike.tres"))
