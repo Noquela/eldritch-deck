@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_1")
-enemy_name = "Shoggoth Menor"
-max_health = 60
-min_damage = 8
-max_damage = 14
-block_amount = 10
-attack_weight = 80
-defend_weight = 15
-buff_weight = 5
+enemy_name = "Profundo"
+max_health = 45
+min_damage = 6
+max_damage = 10
+block_amount = 8
+attack_weight = 60
+defend_weight = 30
+buff_weight = 10
 can_apply_strength = true
-strength_amount = 2
+strength_amount = 1

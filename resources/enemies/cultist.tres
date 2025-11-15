@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_1")
-enemy_name = "Cultista"
+enemy_name = "Adorador Profano"
 max_health = 40
 min_damage = 4
 max_damage = 8

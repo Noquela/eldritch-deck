@@ -25,11 +25,13 @@ extends Node2D
 # Pool de cartas iniciais para o deck
 var initial_deck_cards: Array[Resource] = []
 
-# Pool de tipos de inimigos
+# Pool de tipos de inimigos Lovecraftianos
 var enemy_types: Array[Resource] = [
 	preload("res://resources/enemies/cultist.tres"),
 	preload("res://resources/enemies/brute.tres"),
-	preload("res://resources/enemies/defender.tres")
+	preload("res://resources/enemies/defender.tres"),
+	preload("res://resources/enemies/deep_one.tres"),
+	preload("res://resources/enemies/corrupted_scholar.tres")
 ]
 
 func _ready() -> void:

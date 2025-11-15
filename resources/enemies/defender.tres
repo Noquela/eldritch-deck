@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_1")
-enemy_name = "Guardião"
+enemy_name = "Guardião de R'lyeh"
 max_health = 50
 min_damage = 5
 max_damage = 9
