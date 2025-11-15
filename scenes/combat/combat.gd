@@ -77,6 +77,10 @@ func _on_player_turn_started() -> void:
 	hand.draw_cards(3)
 	end_turn_button.disabled = false
 
+	# Escolher próxima ação do inimigo e mostrar intenção
+	enemy.choose_action()
+	enemy.show_intention()
+
 func _on_enemy_turn_started() -> void:
 	end_turn_button.disabled = true
 	hand.clear_hand()
@@ -88,10 +92,23 @@ func _on_enemy_turn_ended() -> void:
 	pass
 
 func _enemy_take_action() -> void:
-	# Por enquanto, inimigo só ataca
-	var damage = 5
-	player_health.take_damage(damage)
-	print("Inimigo atacou causando %d de dano!" % damage)
+	var action = enemy.get_next_action()
+
+	if action.is_empty():
+		print("Inimigo não tem ação definida!")
+		turn_manager.end_enemy_turn()
+		return
+
+	match action.type:
+		0: # ActionType.ATTACK
+			var damage = action.damage
+			player_health.take_damage(damage)
+			print("Inimigo usou %s causando %d de dano!" % [action.name, damage])
+		1: # ActionType.DEFEND
+			var block = action.block
+			print("Inimigo usou %s ganhando %d de bloqueio!" % [action.name, block])
+		_:
+			print("Inimigo usou %s!" % action.name)
 
 	# Aguardar 1 segundo antes de terminar o turno
 	await get_tree().create_timer(1.0).timeout
