@@ -54,7 +54,10 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: inicializa projeto Godot\n\n- Adiciona project.godot com configurações básicas\n- Cria .gitignore para Godot 4\n- Adiciona ícone placeholder\n- Configura resolução 1280x720\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: inicializa projeto Godot\n\n- Adiciona project.godot com configurações básicas\n- Cria .gitignore para Godot 4\n- Adiciona ícone placeholder\n- Configura resolução 1280x720\n- Cria estrutura de pastas (scenes, scripts, assets)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(godot:*)",
+      "Bash(git restore:*)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []

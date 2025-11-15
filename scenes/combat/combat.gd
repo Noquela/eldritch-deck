@@ -4,8 +4,8 @@ extends Node2D
 @onready var health_bar: ProgressBar = $PlayerHealthBar
 @onready var corruption = $Corruption
 @onready var corruption_bar: ProgressBar = $CorruptionBar
-@onready var player_energy = $PlayerEnergy
-@onready var energy_bar: ProgressBar = $EnergyBar
+@onready var player_sanity = $PlayerSanity
+@onready var sanity_bar: ProgressBar = $SanityBar
 @onready var player_block = $PlayerBlock
 @onready var block_bar: ProgressBar = $BlockBar
 @onready var player_status_manager = $PlayerStatusManager
@@ -40,8 +40,9 @@ func _ready() -> void:
 	corruption.corruption_changed.connect(_on_corruption_changed)
 	corruption.corruption_maxed.connect(_on_corruption_maxed)
 
-	# Conectar signals de energia
-	player_energy.energy_changed.connect(_on_energy_changed)
+	# Conectar signals de sanidade
+	player_sanity.sanity_changed.connect(_on_sanity_changed)
+	player_sanity.went_insane.connect(_on_went_insane)
 
 	# Conectar signals de bloqueio
 	player_block.block_changed.connect(_on_block_changed)
@@ -74,7 +75,7 @@ func _ready() -> void:
 	# Atualizar UI inicial
 	_on_player_health_changed(player_health.current_health, player_health.max_health)
 	_on_corruption_changed(corruption.current_corruption, corruption.max_corruption)
-	_on_energy_changed(player_energy.current_energy, player_energy.max_energy)
+	_on_sanity_changed(player_sanity.current_sanity, player_sanity.max_sanity)
 	_on_block_changed(player_block.current_block)
 
 	# Configurar bloqueio no player_health
@@ -119,9 +120,14 @@ func _on_corruption_maxed() -> void:
 	print("Corrupção máxima! Game Over!")
 	_show_game_over(false)
 
-func _on_energy_changed(current: int, maximum: int) -> void:
-	energy_bar.max_value = maximum
-	energy_bar.value = current
+func _on_sanity_changed(current: int, maximum: int) -> void:
+	sanity_bar.max_value = maximum
+	sanity_bar.value = current
+
+func _on_went_insane() -> void:
+	print("!!! JOGADOR ENLOUQUECEU !!!")
+	# TODO: Adicionar efeitos visuais de enlouquecimento
+	# TODO: Cartas ficam mais fortes mas aleatórias?
 
 func _on_block_changed(current: int) -> void:
 	block_bar.value = current
@@ -152,7 +158,7 @@ func _update_status_label(manager, label: Label) -> void:
 func _on_player_turn_started() -> void:
 	# Resetar bloqueio no início do turno
 	player_block.reset_block()
-	player_energy.restore_full()
+	player_sanity.restore_partial()  # Regenera apenas parcialmente!
 
 	# Reduzir duração dos status effects do jogador
 	player_status_manager.reduce_all_durations()
@@ -270,14 +276,14 @@ func _on_card_played(card_data: Resource) -> void:
 		print("Não é seu turno!")
 		return
 
-	# Verificar se tem energia suficiente
-	if not player_energy.has_energy(card_data.energy_cost):
-		print("Energia insuficiente!")
+	# Verificar se tem sanidade suficiente
+	if not player_sanity.has_sanity(card_data.energy_cost):
+		print("Sanidade insuficiente!")
 		return
 
-	# Gastar energia
-	if not player_energy.spend_energy(card_data.energy_cost):
-		print("Falha ao gastar energia!")
+	# Gastar sanidade
+	if not player_sanity.spend_sanity(card_data.energy_cost):
+		print("Falha ao gastar sanidade!")
 		return
 
 	# Remover a carta da mão (exhaust se necessário)
@@ -311,11 +317,10 @@ func _on_card_played(card_data: Resource) -> void:
 		hand.draw_cards(card_data.draw_cards)
 		print("Carta jogada: %s - Comprou %d cartas - Energia gasta: %d" % [card_data.card_name, card_data.draw_cards, card_data.energy_cost])
 
-	# Ganhar energia
+	# Ganhar sanidade
 	if card_data.energy_gain > 0:
-		player_energy.current_energy += card_data.energy_gain
-		player_energy.energy_changed.emit(player_energy.current_energy, player_energy.max_energy)
-		print("Carta jogada: %s - Ganhou %d energia - Energia gasta: %d" % [card_data.card_name, card_data.energy_gain, card_data.energy_cost])
+		player_sanity.restore_sanity(card_data.energy_gain)
+		print("Carta jogada: %s - Ganhou %d sanidade - Sanidade gasta: %d" % [card_data.card_name, card_data.energy_gain, card_data.energy_cost])
 
 	# Efeitos especiais
 	if card_data.effect_name == "self_damage":

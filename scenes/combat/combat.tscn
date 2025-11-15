@@ -1,16 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://cmadmij5mpil5"]
+[gd_scene load_steps=12 format=3 uid="uid://cmadmij5mpil5"]
 
 [ext_resource type="Script" uid="uid://cqsywm2hpuby" path="res://scenes/combat/combat.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://bg2p2sks2pjya" path="res://scripts/systems/player_health.gd" id="2_health"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="3_enemy"]
 [ext_resource type="Script" uid="uid://c4ftrt7ednpt5" path="res://scripts/systems/corruption.gd" id="4_corruption"]
 [ext_resource type="PackedScene" path="res://scenes/cards/card.tscn" id="5_card"]
-[ext_resource type="Script" uid="uid://bk70qwlkldc7m" path="res://scripts/systems/player_energy.gd" id="6_energy"]
+[ext_resource type="Script" path="res://scripts/systems/player_sanity.gd" id="6_sanity"]
 [ext_resource type="Script" uid="uid://6qhwol6p2ym1" path="res://scripts/systems/hand.gd" id="7_hand"]
 [ext_resource type="Script" uid="uid://c3hkiq5t23kcv" path="res://scripts/systems/turn_manager.gd" id="8_turn"]
 [ext_resource type="Script" uid="uid://kc4dm5vycqg4" path="res://scripts/systems/deck.gd" id="9_deck"]
 [ext_resource type="Script" uid="uid://crj2llxvghmlq" path="res://scripts/systems/player_block.gd" id="10_block"]
-[ext_resource type="Script" path="res://scripts/systems/status_manager.gd" id="11_status"]
+[ext_resource type="Script" uid="uid://bnq7woudbk14w" path="res://scripts/systems/status_manager.gd" id="11_status"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_script")
@@ -27,8 +27,10 @@ script = ExtResource("2_health")
 [node name="Corruption" type="Node" parent="."]
 script = ExtResource("4_corruption")
 
-[node name="PlayerEnergy" type="Node" parent="."]
-script = ExtResource("6_energy")
+[node name="PlayerSanity" type="Node" parent="."]
+script = ExtResource("6_sanity")
+max_sanity = 10
+sanity_regen_per_turn = 3
 
 [node name="TurnManager" type="Node" parent="."]
 script = ExtResource("8_turn")
@@ -60,13 +62,13 @@ offset_right = 520.0
 offset_bottom = 200.0
 show_percentage = false
 
-[node name="EnergyBar" type="ProgressBar" parent="."]
+[node name="SanityBar" type="ProgressBar" parent="."]
 offset_left = 120.0
 offset_top = 220.0
 offset_right = 520.0
 offset_bottom = 270.0
-max_value = 3.0
-value = 3.0
+max_value = 10.0
+value = 10.0
 show_percentage = false
 
 [node name="BlockBar" type="ProgressBar" parent="."]
@@ -83,7 +85,6 @@ offset_top = 360.0
 offset_right = 520.0
 offset_bottom = 420.0
 theme_override_font_sizes/font_size = 20
-text = ""
 vertical_alignment = 1
 
 [node name="EnemyStatusLabel" type="Label" parent="."]
@@ -92,7 +93,6 @@ offset_top = 360.0
 offset_right = 3320.0
 offset_bottom = 420.0
 theme_override_font_sizes/font_size = 20
-text = ""
 vertical_alignment = 1
 
 [node name="Enemy" parent="." instance=ExtResource("3_enemy")]
