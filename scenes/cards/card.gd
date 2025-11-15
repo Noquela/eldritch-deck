@@ -34,4 +34,3 @@ func _gui_input(event: InputEvent) -> void:
 
 func play_card() -> void:
 	card_played.emit(card_data)
-	queue_free()

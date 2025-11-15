@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmadmij5mpil5"]
+[gd_scene load_steps=8 format=3 uid="uid://cmadmij5mpil5"]
 
 [ext_resource type="Script" uid="uid://cqsywm2hpuby" path="res://scenes/combat/combat.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://bg2p2sks2pjya" path="res://scripts/systems/player_health.gd" id="2_health"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="3_enemy"]
 [ext_resource type="Script" uid="uid://c4ftrt7ednpt5" path="res://scripts/systems/corruption.gd" id="4_corruption"]
 [ext_resource type="PackedScene" path="res://scenes/cards/card.tscn" id="5_card"]
+[ext_resource type="Script" path="res://scripts/systems/player_energy.gd" id="6_energy"]
 [ext_resource type="Script" uid="uid://6qhwol6p2ym1" path="res://scripts/systems/hand.gd" id="7_hand"]
 
 [node name="root" type="Node2D"]
@@ -22,6 +23,9 @@ script = ExtResource("2_health")
 [node name="Corruption" type="Node" parent="."]
 script = ExtResource("4_corruption")
 
+[node name="PlayerEnergy" type="Node" parent="."]
+script = ExtResource("6_energy")
+
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
 offset_left = 100.0
 offset_top = 100.0
@@ -35,6 +39,15 @@ offset_left = 100.0
 offset_top = 160.0
 offset_right = 400.0
 offset_bottom = 200.0
+show_percentage = false
+
+[node name="EnergyBar" type="ProgressBar" parent="."]
+offset_left = 100.0
+offset_top = 220.0
+offset_right = 400.0
+offset_bottom = 260.0
+max_value = 3.0
+value = 3.0
 show_percentage = false
 
 [node name="Enemy" parent="." instance=ExtResource("3_enemy")]

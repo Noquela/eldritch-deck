@@ -4,6 +4,8 @@ extends Node2D
 @onready var health_bar: ProgressBar = $PlayerHealthBar
 @onready var corruption = $Corruption
 @onready var corruption_bar: ProgressBar = $CorruptionBar
+@onready var player_energy = $PlayerEnergy
+@onready var energy_bar: ProgressBar = $EnergyBar
 @onready var hand = $Hand
 @onready var enemy = $Enemy
 
@@ -19,12 +21,16 @@ func _ready() -> void:
 	corruption.corruption_changed.connect(_on_corruption_changed)
 	corruption.corruption_maxed.connect(_on_corruption_maxed)
 
+	# Conectar signals de energia
+	player_energy.energy_changed.connect(_on_energy_changed)
+
 	# Conectar signal de carta jogada
 	hand.card_played.connect(_on_card_played)
 
 	# Atualizar UI inicial
 	_on_player_health_changed(player_health.current_health, player_health.max_health)
 	_on_corruption_changed(corruption.current_corruption, corruption.max_corruption)
+	_on_energy_changed(player_energy.current_energy, player_energy.max_energy)
 
 	# Inicializar pool de cartas e comprar mão inicial
 	_initialize_card_pool()
@@ -50,11 +56,35 @@ func _on_corruption_changed(current: float, maximum: float) -> void:
 func _on_corruption_maxed() -> void:
 	print("Corrupção máxima! Game Over!")
 
+func _on_energy_changed(current: int, maximum: int) -> void:
+	energy_bar.max_value = maximum
+	energy_bar.value = current
+
 func _on_card_played(card_data: Resource) -> void:
+	# Verificar se tem energia suficiente
+	if not player_energy.has_energy(card_data.energy_cost):
+		print("Energia insuficiente!")
+		return
+
+	# Gastar energia
+	if not player_energy.spend_energy(card_data.energy_cost):
+		print("Falha ao gastar energia!")
+		return
+
+	# Remover a carta da mão
+	var card_to_remove = null
+	for card in hand.cards_in_hand:
+		if card.card_data == card_data:
+			card_to_remove = card
+			break
+
+	if card_to_remove:
+		hand.remove_card(card_to_remove)
+
 	# Aplicar dano no inimigo
 	if card_data.damage > 0:
 		enemy.take_damage(card_data.damage)
-		print("Carta jogada: %s - Dano: %d" % [card_data.card_name, card_data.damage])
+		print("Carta jogada: %s - Dano: %d - Energia gasta: %d" % [card_data.card_name, card_data.damage, card_data.energy_cost])
 
 	# Adicionar corrupção se houver
 	if card_data.corruption_cost > 0:
