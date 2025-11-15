@@ -8,6 +8,8 @@ extends Node2D
 @onready var energy_bar: ProgressBar = $EnergyBar
 @onready var player_block = $PlayerBlock
 @onready var block_bar: ProgressBar = $BlockBar
+@onready var player_status_manager = $PlayerStatusManager
+@onready var enemy_status_manager = $EnemyStatusManager
 @onready var turn_manager = $TurnManager
 @onready var deck = $Deck
 @onready var end_turn_button: Button = $EndTurnButton
@@ -16,6 +18,8 @@ extends Node2D
 @onready var game_over_panel: Panel = $GameOverPanel
 @onready var game_over_label: Label = $GameOverPanel/GameOverLabel
 @onready var restart_button: Button = $GameOverPanel/RestartButton
+@onready var player_status_label: Label = $PlayerStatusLabel
+@onready var enemy_status_label: Label = $EnemyStatusLabel
 
 # Pool de cartas iniciais para o deck
 var initial_deck_cards: Array[Resource] = []
@@ -34,6 +38,14 @@ func _ready() -> void:
 
 	# Conectar signals de bloqueio
 	player_block.block_changed.connect(_on_block_changed)
+
+	# Conectar signals de status effects
+	player_status_manager.status_applied.connect(_on_player_status_changed)
+	player_status_manager.status_removed.connect(_on_player_status_changed)
+	player_status_manager.status_updated.connect(_on_player_status_changed)
+	enemy_status_manager.status_applied.connect(_on_enemy_status_changed)
+	enemy_status_manager.status_removed.connect(_on_enemy_status_changed)
+	enemy_status_manager.status_updated.connect(_on_enemy_status_changed)
 
 	# Conectar signals de turno
 	turn_manager.player_turn_started.connect(_on_player_turn_started)
@@ -61,6 +73,9 @@ func _ready() -> void:
 	# Configurar bloqueio no player_health
 	player_health.set_player_block(player_block)
 
+	# Configurar status_manager no player_health
+	player_health.set_status_manager(player_status_manager)
+
 	# Inicializar deck
 	_initialize_deck()
 	hand.set_deck(deck)
@@ -82,12 +97,15 @@ func _initialize_deck() -> void:
 		initial_deck_cards.append(load("res://resources/cards/defend.tres"))
 	initial_deck_cards.append(load("res://resources/cards/iron_wall.tres"))
 
-	# Skills: 1x Bandage, 1x Insight
+	# Skills: 1x Bandage, 1x Insight, 1x Enfeeble, 1x Expose
 	initial_deck_cards.append(load("res://resources/cards/bandage.tres"))
 	initial_deck_cards.append(load("res://resources/cards/insight.tres"))
+	initial_deck_cards.append(load("res://resources/cards/enfeeble.tres"))
+	initial_deck_cards.append(load("res://resources/cards/expose.tres"))
 
-	# Powers: 1x Offering
+	# Powers: 1x Offering, 1x Flex
 	initial_deck_cards.append(load("res://resources/cards/offering.tres"))
+	initial_deck_cards.append(load("res://resources/cards/flex.tres"))
 
 	deck.initialize(initial_deck_cards)
 
@@ -114,10 +132,37 @@ func _on_energy_changed(current: int, maximum: int) -> void:
 func _on_block_changed(current: int) -> void:
 	block_bar.value = current
 
+func _on_player_status_changed(_effect_type = null, _stacks: int = 0) -> void:
+	_update_status_label(player_status_manager, player_status_label)
+
+func _on_enemy_status_changed(_effect_type = null, _stacks: int = 0) -> void:
+	_update_status_label(enemy_status_manager, enemy_status_label)
+
+func _update_status_label(manager, label: Label) -> void:
+	var effects = manager.get_all_effects()
+	if effects.is_empty():
+		label.text = ""
+		return
+
+	var status_text = []
+	for effect in effects:
+		var effect_name = effect.get_effect_name()
+		var effect_stacks = effect.stacks
+		var duration_text = ""
+		if effect.duration > 0:
+			duration_text = " (%d)" % effect.duration
+		status_text.append("%s x%d%s" % [effect_name, effect_stacks, duration_text])
+
+	label.text = " | ".join(status_text)
+
 func _on_player_turn_started() -> void:
 	# Resetar bloqueio no início do turno
 	player_block.reset_block()
 	player_energy.restore_full()
+
+	# Reduzir duração dos status effects do jogador
+	player_status_manager.reduce_all_durations()
+
 	hand.draw_cards(3)
 	end_turn_button.disabled = false
 
@@ -128,6 +173,10 @@ func _on_player_turn_started() -> void:
 func _on_enemy_turn_started() -> void:
 	end_turn_button.disabled = true
 	hand.discard_hand()
+
+	# Reduzir duração dos status effects do inimigo
+	enemy_status_manager.reduce_all_durations()
+
 	# Aguardar 1 segundo antes do inimigo agir
 	await get_tree().create_timer(1.0).timeout
 	_enemy_take_action()
@@ -179,6 +228,42 @@ func _show_game_over(victory: bool) -> void:
 func _on_restart_pressed() -> void:
 	get_tree().reload_current_scene()
 
+func _calculate_player_damage(base_damage: int) -> int:
+	var damage = base_damage
+
+	# Aplicar STRENGTH (aumenta dano)
+	var strength = player_status_manager.get_status_stacks(StatusEffect.EffectType.STRENGTH)
+	if strength > 0:
+		damage += strength
+		print("Força +%d: %d → %d" % [strength, base_damage, damage])
+
+	# Aplicar WEAKNESS (reduz dano em 25% por stack)
+	var weakness = player_status_manager.get_status_stacks(StatusEffect.EffectType.WEAKNESS)
+	if weakness > 0:
+		var reduction = int(damage * 0.25 * weakness)
+		damage = max(0, damage - reduction)
+		print("Fraqueza -%d (%d stacks): %d → %d" % [reduction, weakness, base_damage + strength, damage])
+
+	return damage
+
+func _get_effect_type_from_string(effect_string: String):
+	match effect_string.to_upper():
+		"STRENGTH":
+			return StatusEffect.EffectType.STRENGTH
+		"WEAKNESS":
+			return StatusEffect.EffectType.WEAKNESS
+		"VULNERABLE":
+			return StatusEffect.EffectType.VULNERABLE
+		"FRAIL":
+			return StatusEffect.EffectType.FRAIL
+		"REGEN":
+			return StatusEffect.EffectType.REGEN
+		"POISON":
+			return StatusEffect.EffectType.POISON
+		_:
+			print("Status effect desconhecido: %s" % effect_string)
+			return null
+
 func _on_card_played(card_data: Resource) -> void:
 	# Verificar se é turno do jogador
 	if not turn_manager.is_player_turn():
@@ -207,8 +292,9 @@ func _on_card_played(card_data: Resource) -> void:
 
 	# Aplicar dano no inimigo
 	if card_data.damage > 0:
-		enemy.take_damage(card_data.damage)
-		print("Carta jogada: %s - Dano: %d - Energia gasta: %d" % [card_data.card_name, card_data.damage, card_data.energy_cost])
+		var final_damage = _calculate_player_damage(card_data.damage)
+		enemy.take_damage(final_damage)
+		print("Carta jogada: %s - Dano base: %d - Dano final: %d - Energia gasta: %d" % [card_data.card_name, card_data.damage, final_damage, card_data.energy_cost])
 
 	# Ganhar bloqueio
 	if card_data.block > 0:
@@ -235,6 +321,18 @@ func _on_card_played(card_data: Resource) -> void:
 	if card_data.effect_name == "self_damage":
 		player_health.take_damage(card_data.effect_value)
 		print("Efeito: Sofreu %d de dano" % card_data.effect_value)
+
+	# Aplicar status effects no jogador
+	if card_data.apply_player_status != "" and card_data.apply_player_stacks > 0:
+		var effect_type = _get_effect_type_from_string(card_data.apply_player_status)
+		if effect_type != null:
+			player_status_manager.apply_status(effect_type, card_data.apply_player_stacks, card_data.apply_player_duration)
+
+	# Aplicar status effects no inimigo
+	if card_data.apply_enemy_status != "" and card_data.apply_enemy_stacks > 0:
+		var effect_type = _get_effect_type_from_string(card_data.apply_enemy_status)
+		if effect_type != null:
+			enemy_status_manager.apply_status(effect_type, card_data.apply_enemy_stacks, card_data.apply_enemy_duration)
 
 	# Adicionar corrupção se houver
 	if card_data.corruption_cost > 0:

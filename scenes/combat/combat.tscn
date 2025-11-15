@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://c3hkiq5t23kcv" path="res://scripts/systems/turn_manager.gd" id="8_turn"]
 [ext_resource type="Script" uid="uid://kc4dm5vycqg4" path="res://scripts/systems/deck.gd" id="9_deck"]
 [ext_resource type="Script" uid="uid://crj2llxvghmlq" path="res://scripts/systems/player_block.gd" id="10_block"]
+[ext_resource type="Script" path="res://scripts/systems/status_manager.gd" id="11_status"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_script")
@@ -37,6 +38,12 @@ script = ExtResource("9_deck")
 
 [node name="PlayerBlock" type="Node" parent="."]
 script = ExtResource("10_block")
+
+[node name="PlayerStatusManager" type="Node" parent="."]
+script = ExtResource("11_status")
+
+[node name="EnemyStatusManager" type="Node" parent="."]
+script = ExtResource("11_status")
 
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
 offset_left = 100.0
@@ -69,6 +76,24 @@ offset_right = 400.0
 offset_bottom = 320.0
 max_value = 50.0
 show_percentage = false
+
+[node name="PlayerStatusLabel" type="Label" parent="."]
+offset_left = 100.0
+offset_top = 340.0
+offset_right = 400.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 20
+text = ""
+vertical_alignment = 1
+
+[node name="EnemyStatusLabel" type="Label" parent="."]
+offset_left = 1520.0
+offset_top = 340.0
+offset_right = 1920.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 20
+text = ""
+vertical_alignment = 1
 
 [node name="Enemy" parent="." instance=ExtResource("3_enemy")]
 position = Vector2(1720, 500)

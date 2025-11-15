@@ -25,5 +25,13 @@ enum CardType {
 @export var effect_value: int = 0  # Valor do efeito
 @export var is_exhaust: bool = false  # Carta some após jogar
 
+# Status effects (buffs/debuffs)
+@export var apply_player_status: String = ""  # Status effect para jogador (ex: "STRENGTH")
+@export var apply_player_stacks: int = 0  # Quantidade de stacks para jogador
+@export var apply_player_duration: int = -1  # Duração para jogador (-1 = permanente)
+@export var apply_enemy_status: String = ""  # Status effect para inimigo (ex: "WEAKNESS")
+@export var apply_enemy_stacks: int = 0  # Quantidade de stacks para inimigo
+@export var apply_enemy_duration: int = -1  # Duração para inimigo (-1 = permanente)
+
 func _to_string() -> String:
 	return "%s (Custo: %d energia, %d corrupção)" % [card_name, energy_cost, corruption_cost]
