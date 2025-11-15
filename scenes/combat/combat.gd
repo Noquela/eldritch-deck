@@ -100,30 +100,8 @@ func _spawn_random_enemy() -> void:
 	print("Inimigo spawnou: %s (HP: %d)" % [random_enemy_data.enemy_name, random_enemy_data.max_health])
 
 func _initialize_deck() -> void:
-	# Ataques: 5x Strike, 2x Heavy Strike, 1x Devastating Blow, 1x Desperate Strike
-	for i in range(5):
-		initial_deck_cards.append(load("res://resources/cards/strike.tres"))
-	for i in range(2):
-		initial_deck_cards.append(load("res://resources/cards/heavy_strike.tres"))
-	initial_deck_cards.append(load("res://resources/cards/devastating_blow.tres"))
-	initial_deck_cards.append(load("res://resources/cards/desperate_strike.tres"))
-
-	# Defesa: 3x Defend, 1x Iron Wall
-	for i in range(3):
-		initial_deck_cards.append(load("res://resources/cards/defend.tres"))
-	initial_deck_cards.append(load("res://resources/cards/iron_wall.tres"))
-
-	# Skills: 1x Bandage, 1x Insight, 1x Enfeeble, 1x Expose
-	initial_deck_cards.append(load("res://resources/cards/bandage.tres"))
-	initial_deck_cards.append(load("res://resources/cards/insight.tres"))
-	initial_deck_cards.append(load("res://resources/cards/enfeeble.tres"))
-	initial_deck_cards.append(load("res://resources/cards/expose.tres"))
-
-	# Powers: 1x Offering, 1x Flex
-	initial_deck_cards.append(load("res://resources/cards/offering.tres"))
-	initial_deck_cards.append(load("res://resources/cards/flex.tres"))
-
-	deck.initialize(initial_deck_cards)
+	# Usar deck do GameState ao invés de criar novo
+	deck.initialize(GameState.player_deck)
 
 func _on_player_health_changed(current: int, maximum: int) -> void:
 	health_bar.max_value = maximum
@@ -232,7 +210,9 @@ func _on_end_turn_pressed() -> void:
 
 func _on_enemy_died() -> void:
 	print("Inimigo morreu! Vitória!")
-	_show_game_over(true)
+	# Ir para tela de recompensas ao invés de game over
+	await get_tree().create_timer(1.0).timeout
+	get_tree().change_scene_to_file("res://scenes/rewards/rewards.tscn")
 
 func _show_game_over(victory: bool) -> void:
 	game_over_panel.visible = true
