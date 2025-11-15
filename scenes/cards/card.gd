@@ -2,6 +2,7 @@ extends Control
 class_name Card
 
 signal card_played(card_data: Resource)
+signal card_clicked(card_data: Resource)  # Para tela de recompensas
 
 @export var card_data: Resource
 
@@ -30,6 +31,8 @@ func update_display() -> void:
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# Emitir ambos os signals para suportar contextos diferentes
+			card_clicked.emit(card_data)
 			play_card()
 
 func play_card() -> void:

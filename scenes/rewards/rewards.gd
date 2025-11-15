@@ -64,7 +64,8 @@ func _setup_rewards() -> void:
 		var card_instance = card_scene.instantiate()
 		card_choices.add_child(card_instance)
 		card_instance.set_card_data(card_data)
-		card_instance.card_clicked.connect(_on_card_chosen.bind(card_data))
+		# O signal card_clicked já emite card_data, não precisa de .bind()
+		card_instance.card_clicked.connect(_on_card_chosen)
 
 func _on_card_chosen(card_data: Resource) -> void:
 	# Adicionar carta ao deck
