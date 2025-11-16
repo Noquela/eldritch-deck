@@ -88,6 +88,5 @@ func _on_continue_pressed() -> void:
 	_continue_to_next()
 
 func _continue_to_next() -> void:
-	# Por enquanto, voltar para o combate
-	# Mais tarde isso vai para o mapa
-	get_tree().change_scene_to_file("res://scenes/combat/combat.tscn")
+	# Ir para o mapa após vitória
+	get_tree().change_scene_to_file("res://scenes/map/map.tscn")
