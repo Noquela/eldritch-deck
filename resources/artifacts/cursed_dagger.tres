@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ArtifactData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/artifact_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+artifact_name = "Adaga Amaldiçoada"
+description = "+25% dano, mas ganha 1 Corrupção por turno.\n\"Poder tem um preço.\""
+flavor_text = "A lâmina sussurra promessas sombrias."
+rarity = 4
+effect_trigger = 8
+effect_id = "cursed_damage"
+damage_multiplier = 1.25
+corruption_per_turn = 1

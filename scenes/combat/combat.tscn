@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://crj2llxvghmlq" path="res://scripts/systems/player_block.gd" id="10_block"]
 [ext_resource type="Script" uid="uid://bnq7woudbk14w" path="res://scripts/systems/status_manager.gd" id="11_status"]
 [ext_resource type="Script" path="res://scripts/systems/ritual_manager.gd" id="12_ritual"]
+[ext_resource type="Script" path="res://scripts/systems/artifact_manager.gd" id="13_artifact"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_script")
@@ -50,6 +51,9 @@ script = ExtResource("11_status")
 
 [node name="RitualManager" type="Node" parent="."]
 script = ExtResource("12_ritual")
+
+[node name="ArtifactManager" type="Node" parent="."]
+script = ExtResource("13_artifact")
 
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
 offset_left = 120.0
@@ -143,3 +147,25 @@ offset_top = 250.0
 offset_right = 700.0
 offset_bottom = 330.0
 text = "Jogar Novamente"
+
+[node name="ArtifactsPanel" type="Panel" parent="."]
+offset_left = 2960.0
+offset_top = 20.0
+offset_right = 3420.0
+offset_bottom = 220.0
+
+[node name="ArtifactsLabel" type="Label" parent="ArtifactsPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 450.0
+offset_bottom = 35.0
+theme_override_font_sizes/font_size = 20
+text = "Artefatos:"
+
+[node name="ArtifactsList" type="VBoxContainer" parent="ArtifactsPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 40.0
+offset_right = 450.0
+offset_bottom = 190.0

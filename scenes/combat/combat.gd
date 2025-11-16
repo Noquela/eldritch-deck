@@ -11,6 +11,7 @@ extends Node2D
 @onready var player_status_manager = $PlayerStatusManager
 @onready var enemy_status_manager = $EnemyStatusManager
 @onready var ritual_manager = $RitualManager
+@onready var artifact_manager = $ArtifactManager
 @onready var turn_manager = $TurnManager
 @onready var deck = $Deck
 @onready var end_turn_button: Button = $EndTurnButton
@@ -21,6 +22,7 @@ extends Node2D
 @onready var restart_button: Button = $GameOverPanel/RestartButton
 @onready var player_status_label: Label = $PlayerStatusLabel
 @onready var enemy_status_label: Label = $EnemyStatusLabel
+@onready var artifacts_list: VBoxContainer = $ArtifactsPanel/ArtifactsList
 
 # Pool de cartas iniciais para o deck
 var initial_deck_cards: Array[Resource] = []
@@ -94,8 +96,30 @@ func _ready() -> void:
 	# Inicializar inimigo aleatório
 	_spawn_random_enemy()
 
+	# TESTE: Adicionar artefatos de teste
+	var test_artifact1 = preload("res://resources/artifacts/necronomicon_page.tres")
+	var test_artifact2 = preload("res://resources/artifacts/shining_trapezohedron.tres")
+	artifact_manager.add_artifact(test_artifact1)
+	artifact_manager.add_artifact(test_artifact2)
+
+	# Atualizar UI de artefatos
+	_update_artifacts_ui()
+
 	# Iniciar o primeiro turno
 	turn_manager.initialize()
+
+func _update_artifacts_ui() -> void:
+	# Limpar lista atual
+	for child in artifacts_list.get_children():
+		child.queue_free()
+
+	# Adicionar cada artefato
+	for artifact in artifact_manager.active_artifacts:
+		var label = Label.new()
+		label.text = "🔮 %s" % artifact.artifact_name
+		label.add_theme_font_size_override("font_size", 14)
+		label.modulate = artifact.get_rarity_color()
+		artifacts_list.add_child(label)
 
 func _spawn_random_enemy() -> void:
 	# Escolher tipo de inimigo aleatório
@@ -169,6 +193,13 @@ func _on_player_turn_started() -> void:
 	# MECÂNICA LOVECRAFTIANA: Progredir rituais ativos!
 	ritual_manager.progress_rituals(enemy)
 
+	# ARTEFATOS: Trigger de início de turno
+	artifact_manager.trigger_effect(ArtifactData.EffectTrigger.ON_TURN_START, {
+		"player": player_health,
+		"enemy": enemy,
+		"corruption": corruption
+	})
+
 	hand.draw_cards(3)
 	end_turn_button.disabled = false
 
@@ -222,6 +253,13 @@ func _on_end_turn_pressed() -> void:
 
 func _on_enemy_died() -> void:
 	print("Inimigo morreu! Vitória!")
+
+	# ARTEFATOS: Trigger ao matar inimigo
+	artifact_manager.trigger_effect(ArtifactData.EffectTrigger.ON_ENEMY_DEATH, {
+		"player": player_health,
+		"corruption": corruption
+	})
+
 	# Ir para tela de recompensas ao invés de game over
 	await get_tree().create_timer(1.0).timeout
 	get_tree().change_scene_to_file("res://scenes/rewards/rewards.tscn")
@@ -242,6 +280,9 @@ func _on_restart_pressed() -> void:
 
 func _calculate_player_damage(base_damage: int) -> int:
 	var damage = base_damage
+
+	# ARTEFATOS: Multiplicador de dano
+	damage = int(damage * artifact_manager.get_stat_multiplier("damage"))
 
 	# MECÂNICA LOVECRAFTIANA: Corrupção aumenta poder!
 	# Cada ponto de Corrupção = +1% de dano
@@ -269,6 +310,9 @@ func _calculate_player_damage(base_damage: int) -> int:
 
 func _calculate_player_block(base_block: int) -> int:
 	var block = base_block
+
+	# ARTEFATOS: Multiplicador de bloqueio
+	block = int(block * artifact_manager.get_stat_multiplier("block"))
 
 	# MECÂNICA LOVECRAFTIANA: Corrupção aumenta bloqueio também!
 	# Cada ponto de Corrupção = +1% de bloqueio

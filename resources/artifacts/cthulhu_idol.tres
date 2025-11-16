@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ArtifactData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/artifact_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+artifact_name = "Ídolo de Cthulhu"
+description = "Ao matar inimigo: cura 5 HP.\n\"O sono eterno rejuvenesce.\""
+flavor_text = "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn."
+rarity = 1
+effect_trigger = 6
+effect_id = "heal_on_kill"
+trigger_value = 5

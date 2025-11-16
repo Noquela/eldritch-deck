@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ArtifactData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/artifact_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+artifact_name = "Página do Necronomicon"
+description = "Aumenta seu dano em 15%.\n\"Palavras proibidas conferem poder proibido.\""
+flavor_text = "Iä! Iä! Cthulhu fhtagn!"
+rarity = 2
+effect_trigger = 8
+effect_id = "damage_boost"
+damage_multiplier = 1.15

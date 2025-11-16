@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ArtifactData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/artifact_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+artifact_name = "Sinal Anciã
+
+o"
+description = "Aumenta seu bloqueio em 20%.\n\"Proteção contra o inominável.\""
+flavor_text = "Um símbolo de poder esquecido."
+rarity = 1
+effect_trigger = 8
+effect_id = "block_boost"
+block_multiplier = 1.2

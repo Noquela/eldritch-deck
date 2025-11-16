@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ArtifactData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/artifact_data.gd" id="1_1"]
+
+[resource]
+script = ExtResource("1_1")
+artifact_name = "Trapezedro Reluzente"
+description = "Ao início do turno: causa 3 de dano ao inimigo.\n\"Visões do futuro... e da morte.\""
+flavor_text = "Ele vê através do véu."
+rarity = 2
+effect_trigger = 1
+effect_id = "damage_on_turn_start"
+trigger_value = 3
