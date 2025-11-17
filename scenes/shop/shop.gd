@@ -150,9 +150,85 @@ func _on_remove_button_pressed() -> void:
 		print("❌ Ouro insuficiente! Precisa de %d" % REMOVE_PRICE)
 		return
 
-	# TODO: Implementar seleção de carta para remover
-	print("⚠ Remoção de carta ainda não implementada!")
+	if GameState.player_deck.is_empty():
+		print("❌ Deck vazio! Não há cartas para remover")
+		return
+
+	_show_card_removal_popup()
 
 func _on_leave_button_pressed() -> void:
 	# Voltar ao mapa
 	get_tree().change_scene_to_file("res://scenes/map/map.tscn")
+
+func _show_card_removal_popup() -> void:
+	# Criar popup
+	var popup = Panel.new()
+	popup.custom_minimum_size = Vector2(800, 600)
+	popup.position = Vector2(240, 90)
+	add_child(popup)
+
+	var vbox = VBoxContainer.new()
+	popup.add_child(vbox)
+	vbox.position = Vector2(20, 20)
+	vbox.custom_minimum_size = Vector2(760, 560)
+
+	# Título
+	var title = Label.new()
+	title.text = "❌ Selecione uma carta para remover (50 ouro)"
+	title.add_theme_font_size_override("font_size", 24)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(title)
+
+	# Scroll container para cartas
+	var scroll = ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(760, 450)
+	vbox.add_child(scroll)
+
+	var cards_grid = GridContainer.new()
+	cards_grid.columns = 5
+	cards_grid.add_theme_constant_override("h_separation", 10)
+	cards_grid.add_theme_constant_override("v_separation", 10)
+	scroll.add_child(cards_grid)
+
+	# Agrupar cartas por nome e contar
+	var card_counts = {}
+	for card in GameState.player_deck:
+		var card_name = card.card_name
+		if card_counts.has(card_name):
+			card_counts[card_name]["count"] += 1
+		else:
+			card_counts[card_name] = {"card": card, "count": 1}
+
+	# Mostrar cada carta única com contador
+	for card_name in card_counts.keys():
+		var card_info = card_counts[card_name]
+		var card_data = card_info["card"]
+		var count = card_info["count"]
+
+		var card_button = Button.new()
+		card_button.custom_minimum_size = Vector2(140, 80)
+		card_button.text = "%s\nx%d" % [card_name, count]
+		card_button.pressed.connect(_on_card_selected_for_removal.bind(card_data, popup))
+		cards_grid.add_child(card_button)
+
+	# Botão de cancelar
+	var cancel_button = Button.new()
+	cancel_button.text = "Cancelar"
+	cancel_button.pressed.connect(func(): popup.queue_free())
+	vbox.add_child(cancel_button)
+
+func _on_card_selected_for_removal(card_data: Resource, popup: Panel) -> void:
+	# Gastar ouro
+	if not GameState.spend_gold(REMOVE_PRICE):
+		print("❌ Erro ao gastar ouro")
+		return
+
+	# Remover carta
+	GameState.remove_card_from_deck(card_data)
+	print("✅ Carta removida: %s (restam %d cartas no deck)" % [card_data.card_name, GameState.player_deck.size()])
+
+	# Fechar popup
+	popup.queue_free()
+
+	# Atualizar display de ouro
+	_update_gold_display()
