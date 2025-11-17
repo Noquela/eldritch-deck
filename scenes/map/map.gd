@@ -13,8 +13,17 @@ func _ready() -> void:
 	_generate_map()
 
 func _generate_map() -> void:
-	# Gerar dados do mapa
-	map_nodes = MapGenerator.generate_map(current_act)
+	# Se já existe mapa salvo no GameState, usar ele
+	if not GameState.current_map_nodes.is_empty():
+		map_nodes = GameState.current_map_nodes
+		current_act = GameState.current_act
+		print("📍 Mapa restaurado do GameState")
+	else:
+		# Gerar novo mapa
+		map_nodes = MapGenerator.generate_map(current_act)
+		GameState.current_map_nodes = map_nodes
+		GameState.current_act = current_act
+		print("🗺️ Novo mapa gerado")
 
 	# Atualizar label do ato
 	act_label.text = "Ato %d - R'lyeh" % current_act
@@ -86,6 +95,10 @@ func _on_node_clicked(node_data: MapNodeData) -> void:
 	# Atualizar visual do nó atual
 	if node_instances.has(node_data.node_id):
 		node_instances[node_data.node_id].set_node_data(node_data)
+
+	# Salvar estado do mapa no GameState
+	GameState.current_map_nodes = map_nodes
+	GameState.map_state_changed.emit()
 
 	# Navegar para a cena apropriada
 	_navigate_to_node(node_data)

@@ -17,10 +17,13 @@ var gold: int:
 # Progresso no mapa
 var current_floor: int = 1
 var nodes_cleared: int = 0
+var current_map_nodes: Array[MapNodeData] = []  # Estado atual do mapa
+var current_act: int = 1
 
 signal health_changed(current: int, maximum: int)
 signal gold_changed(amount: int)
 signal deck_changed
+signal map_state_changed
 
 func _ready() -> void:
 	_initialize_starting_deck()
