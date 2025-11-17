@@ -88,5 +88,8 @@ func _on_continue_pressed() -> void:
 	_continue_to_next()
 
 func _continue_to_next() -> void:
+	# AUTOSAVE: Salvar progresso após vitória
+	SaveManager.save_game()
+
 	# Ir para o mapa após vitória
 	get_tree().change_scene_to_file("res://scenes/map/map.tscn")

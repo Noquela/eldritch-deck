@@ -157,6 +157,9 @@ func _on_remove_button_pressed() -> void:
 	_show_card_removal_popup()
 
 func _on_leave_button_pressed() -> void:
+	# AUTOSAVE: Salvar progresso após visitar loja
+	SaveManager.save_game()
+
 	# Voltar ao mapa
 	get_tree().change_scene_to_file("res://scenes/map/map.tscn")
 

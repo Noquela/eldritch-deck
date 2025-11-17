@@ -57,7 +57,9 @@
       "Bash(git commit:*)",
       "Bash(godot:*)",
       "Bash(git restore:*)",
-      "Bash(move:*)"
+      "Bash(move:*)",
+      "Bash(powershell -Command \"$env:PGPASSWORD=''#7u9XXfxn''; & ''C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe'' -U postgres -h localhost -d cardgame -c \"\"\nCREATE TABLE IF NOT EXISTS player_saves (\n    id SERIAL PRIMARY KEY,\n    save_name VARCHAR(100) NOT NULL,\n    current_health INT NOT NULL,\n    max_health INT NOT NULL,\n    gold INT NOT NULL,\n    current_floor INT NOT NULL,\n    nodes_cleared INT NOT NULL,\n    current_act INT NOT NULL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE TABLE IF NOT EXISTS player_deck (\n    id SERIAL PRIMARY KEY,\n    save_id INT REFERENCES player_saves(id) ON DELETE CASCADE,\n    card_resource_path VARCHAR(255) NOT NULL\n);\n\nCREATE TABLE IF NOT EXISTS player_artifacts (\n    id SERIAL PRIMARY KEY,\n    save_id INT REFERENCES player_saves(id) ON DELETE CASCADE,\n    artifact_resource_path VARCHAR(255) NOT NULL\n);\n\nCREATE TABLE IF NOT EXISTS map_nodes (\n    id SERIAL PRIMARY KEY,\n    save_id INT REFERENCES player_saves(id) ON DELETE CASCADE,\n    node_id INT NOT NULL,\n    node_type INT NOT NULL,\n    position_x FLOAT NOT NULL,\n    position_y FLOAT NOT NULL,\n    is_available BOOLEAN NOT NULL,\n    is_completed BOOLEAN NOT NULL,\n    connected_nodes TEXT\n);\n\"\"\")",
+      "Bash(cmd.exe /c \"set PGPASSWORD=#7u9XXfxn && type create_save_schema.sql | \"\"C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe\"\" -U postgres -h localhost -d cardgame\")"
     ],
     "deny": [],
     "ask": []

@@ -82,4 +82,7 @@ func _on_leave_pressed() -> void:
 	_return_to_map()
 
 func _return_to_map() -> void:
+	# AUTOSAVE: Salvar progresso após visitar fogueira
+	SaveManager.save_game()
+
 	get_tree().change_scene_to_file("res://scenes/map/map.tscn")
