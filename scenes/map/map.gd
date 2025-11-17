@@ -98,8 +98,7 @@ func _navigate_to_node(node_data: MapNodeData) -> void:
 			# TODO: Combate elite (inimigos mais fortes)
 			get_tree().change_scene_to_file("res://scenes/combat/combat.tscn")
 		MapNodeData.NodeType.SHOP:
-			# TODO: Cena de loja
-			print("⚠ Loja ainda não implementada!")
+			get_tree().change_scene_to_file("res://scenes/shop/shop.tscn")
 		MapNodeData.NodeType.CAMPFIRE:
 			# TODO: Cena de fogueira
 			print("⚠ Fogueira ainda não implementada!")

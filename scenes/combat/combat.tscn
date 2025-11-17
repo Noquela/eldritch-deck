@@ -1,18 +1,18 @@
-[gd_scene load_steps=12 format=3 uid="uid://cmadmij5mpil5"]
+[gd_scene load_steps=14 format=3 uid="uid://cmadmij5mpil5"]
 
 [ext_resource type="Script" uid="uid://cqsywm2hpuby" path="res://scenes/combat/combat.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://bg2p2sks2pjya" path="res://scripts/systems/player_health.gd" id="2_health"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="3_enemy"]
 [ext_resource type="Script" uid="uid://c4ftrt7ednpt5" path="res://scripts/systems/corruption.gd" id="4_corruption"]
 [ext_resource type="PackedScene" path="res://scenes/cards/card.tscn" id="5_card"]
-[ext_resource type="Script" path="res://scripts/systems/player_sanity.gd" id="6_sanity"]
+[ext_resource type="Script" uid="uid://bc1fr1anfmdy8" path="res://scripts/systems/player_sanity.gd" id="6_sanity"]
 [ext_resource type="Script" uid="uid://6qhwol6p2ym1" path="res://scripts/systems/hand.gd" id="7_hand"]
 [ext_resource type="Script" uid="uid://c3hkiq5t23kcv" path="res://scripts/systems/turn_manager.gd" id="8_turn"]
 [ext_resource type="Script" uid="uid://kc4dm5vycqg4" path="res://scripts/systems/deck.gd" id="9_deck"]
 [ext_resource type="Script" uid="uid://crj2llxvghmlq" path="res://scripts/systems/player_block.gd" id="10_block"]
 [ext_resource type="Script" uid="uid://bnq7woudbk14w" path="res://scripts/systems/status_manager.gd" id="11_status"]
-[ext_resource type="Script" path="res://scripts/systems/ritual_manager.gd" id="12_ritual"]
-[ext_resource type="Script" path="res://scripts/systems/artifact_manager.gd" id="13_artifact"]
+[ext_resource type="Script" uid="uid://b18rifhsxotcg" path="res://scripts/systems/ritual_manager.gd" id="12_ritual"]
+[ext_resource type="Script" uid="uid://dln0crioblwsc" path="res://scripts/systems/artifact_manager.gd" id="13_artifact"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_script")
@@ -31,8 +31,6 @@ script = ExtResource("4_corruption")
 
 [node name="PlayerSanity" type="Node" parent="."]
 script = ExtResource("6_sanity")
-max_sanity = 10
-sanity_regen_per_turn = 3
 
 [node name="TurnManager" type="Node" parent="."]
 script = ExtResource("8_turn")

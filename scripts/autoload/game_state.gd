@@ -5,8 +5,14 @@ extends Node
 # Dados do jogador
 var player_max_health: int = 100
 var player_current_health: int = 100
-var player_gold: int = 0
+var player_gold: int = 100  # Começar com 100 de ouro para testar loja
 var player_deck: Array[Resource] = []
+var player_artifacts: Array[Resource] = []
+
+# Alias para compatibilidade
+var gold: int:
+	get: return player_gold
+	set(value): player_gold = value
 
 # Progresso no mapa
 var current_floor: int = 1
@@ -60,6 +66,10 @@ func remove_card_from_deck(card: Resource) -> void:
 	if idx >= 0:
 		player_deck.remove_at(idx)
 		deck_changed.emit()
+
+func add_artifact(artifact: Resource) -> void:
+	player_artifacts.append(artifact)
+	print("🔮 Artefato adicionado à coleção: %s" % artifact.artifact_name)
 
 func add_gold(amount: int) -> void:
 	player_gold += amount
