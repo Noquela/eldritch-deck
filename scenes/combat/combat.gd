@@ -359,9 +359,45 @@ func _on_enemy_died() -> void:
 		"corruption": corruption
 	})
 
-	# Ir para tela de recompensas ao invés de game over
 	await get_tree().create_timer(1.0).timeout
-	get_tree().change_scene_to_file("res://scenes/rewards/rewards.tscn")
+
+	# Se era boss fight, avançar Act
+	if is_boss_fight:
+		_handle_boss_victory()
+	else:
+		# Combate normal: ir para recompensas
+		get_tree().change_scene_to_file("res://scenes/rewards/rewards.tscn")
+
+func _handle_boss_victory() -> void:
+	"""Lida com vitória contra boss e progressão de Act"""
+	print("🎉 BOSS DERROTADO! Act %d completo!" % GameState.current_act)
+
+	# Resetar boss fight flags
+	GameState.is_boss_fight = false
+	GameState.current_boss = null
+
+	# Avançar para próximo Act
+	if GameState.current_act < 3:
+		GameState.current_act += 1
+		GameState.current_floor = 1
+		GameState.nodes_cleared = 0
+		GameState.current_map_nodes.clear()
+
+		print("⚡ Avançando para Act %d!" % GameState.current_act)
+
+		# TODO: Mostrar tela de vitória do Act com lore
+		get_tree().change_scene_to_file("res://scenes/map/map.tscn")
+	else:
+		# Act 3 completo = VITÓRIA FINAL!
+		print("🏆 JOGO COMPLETO! VOCÊ DERROTOU CTHULHU!")
+		_show_final_victory()
+
+func _show_final_victory() -> void:
+	"""Mostra tela de vitória final"""
+	game_over_panel.visible = true
+	end_turn_button.disabled = true
+	game_over_label.text = "VITÓRIA FINAL!\nVOCÊ DERROTOU CTHULHU!\nR'LYEH ESTÁ SELADO!"
+	game_over_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
 
 func _show_game_over(victory: bool) -> void:
 	game_over_panel.visible = true
