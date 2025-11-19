@@ -58,8 +58,8 @@ offset_left = 20.0
 offset_top = 80.0
 offset_right = 110.0
 offset_bottom = 130.0
-theme_override_font_sizes/font_size = 20
-text = "❤ VIDA"
+theme_override_font_sizes/font_size = 16
+text = "❤ HP"
 vertical_alignment = 1
 
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
@@ -75,8 +75,8 @@ offset_left = 20.0
 offset_top = 150.0
 offset_right = 110.0
 offset_bottom = 200.0
-theme_override_font_sizes/font_size = 18
-text = "☠ CORRUP"
+theme_override_font_sizes/font_size = 16
+text = "☠ CORR"
 vertical_alignment = 1
 
 [node name="CorruptionBar" type="ProgressBar" parent="."]
@@ -91,8 +91,8 @@ offset_left = 20.0
 offset_top = 220.0
 offset_right = 110.0
 offset_bottom = 270.0
-theme_override_font_sizes/font_size = 18
-text = "🧠 SANITY"
+theme_override_font_sizes/font_size = 16
+text = "🧠 SAN"
 vertical_alignment = 1
 
 [node name="SanityBar" type="ProgressBar" parent="."]
@@ -109,8 +109,8 @@ offset_left = 20.0
 offset_top = 290.0
 offset_right = 110.0
 offset_bottom = 340.0
-theme_override_font_sizes/font_size = 18
-text = "🛡 BLOCK"
+theme_override_font_sizes/font_size = 16
+text = "🛡 BLK"
 vertical_alignment = 1
 
 [node name="BlockBar" type="ProgressBar" parent="."]
