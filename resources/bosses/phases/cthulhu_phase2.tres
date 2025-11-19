@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BossPhase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_phase.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+phase_name = "Fúria do Antigo"
+hp_threshold = 0.66
+phase_description = "CTHULHU SE LEVANTA! Asas membranosas se expandem! Tentáculos chicoteiam! A realidade se RACHA ao seu redor!"
+min_damage = 15
+max_damage = 22
+block_amount = 12
+attack_weight = 70
+defend_weight = 10
+special_ability_weight = 20
+can_apply_strength = true
+strength_amount = 4
+can_apply_weakness = true
+weakness_amount = 3
+can_apply_vulnerable = true
+vulnerable_amount = 3
+can_multi_attack = true
+multi_attack_count = 2
+special_ability_name = "Tentáculos Cósmicos"
+special_ability_description = "Golpeia duas vezes com força brutal"

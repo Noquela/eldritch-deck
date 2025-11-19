@@ -36,6 +36,11 @@ var enemy_types: Array[Resource] = [
 	preload("res://resources/enemies/corrupted_scholar.tres")
 ]
 
+# Boss fight support
+var is_boss_fight: bool = false
+var boss_data: BossData = null
+var current_boss_phase_index: int = 0
+
 func _ready() -> void:
 	# Conectar signals de vida
 	player_health.health_changed.connect(_on_player_health_changed)
@@ -67,6 +72,7 @@ func _ready() -> void:
 
 	# Conectar signals do inimigo
 	enemy.enemy_died.connect(_on_enemy_died)
+	enemy.health_changed.connect(_on_enemy_health_changed)
 
 	# Conectar botão de End Turn
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
@@ -93,8 +99,12 @@ func _ready() -> void:
 	_initialize_deck()
 	hand.set_deck(deck)
 
-	# Inicializar inimigo aleatório
-	_spawn_random_enemy()
+	# Verificar se é boss fight
+	if GameState.is_boss_fight and GameState.current_boss:
+		spawn_boss(GameState.current_boss)
+	else:
+		# Inicializar inimigo aleatório
+		_spawn_random_enemy()
 
 	# TESTE: Adicionar artefatos de teste
 	var test_artifact1 = preload("res://resources/artifacts/necronomicon_page.tres")
@@ -126,6 +136,31 @@ func _spawn_random_enemy() -> void:
 	var random_enemy_data = enemy_types[randi() % enemy_types.size()]
 	enemy.initialize_from_data(random_enemy_data)
 	print("Inimigo spawnou: %s (HP: %d)" % [random_enemy_data.enemy_name, random_enemy_data.max_health])
+
+func spawn_boss(boss: BossData) -> void:
+	"""Inicializa combate de boss com múltiplas fases"""
+	is_boss_fight = true
+	boss_data = boss
+	current_boss_phase_index = 0
+
+	# Converter boss para EnemyData para usar sistema existente
+	var boss_as_enemy = EnemyData.new()
+	boss_as_enemy.enemy_name = boss.boss_name
+	boss_as_enemy.max_health = boss.max_health
+
+	# Usar stats da primeira fase
+	if not boss.phases.is_empty():
+		var first_phase = boss.phases[0]
+		boss_as_enemy.min_damage = first_phase.min_damage
+		boss_as_enemy.max_damage = first_phase.max_damage
+		boss_as_enemy.block_amount = first_phase.block_amount
+		boss_as_enemy.attack_weight = first_phase.attack_weight
+		boss_as_enemy.defend_weight = first_phase.defend_weight
+		boss_as_enemy.can_apply_strength = first_phase.can_apply_strength
+		boss_as_enemy.strength_amount = first_phase.strength_amount
+
+	enemy.initialize_from_data(boss_as_enemy)
+	print("🔥 BOSS FIGHT: %s (HP: %d, %d fases)" % [boss.boss_name, boss.max_health, boss.phases.size()])
 
 func _initialize_deck() -> void:
 	# Usar deck do GameState ao invés de criar novo
@@ -250,6 +285,70 @@ func _enemy_take_action() -> void:
 
 func _on_end_turn_pressed() -> void:
 	turn_manager.end_player_turn()
+
+func _on_enemy_health_changed(current: int, maximum: int) -> void:
+	# Verificar transição de fase se for boss fight
+	if is_boss_fight and boss_data:
+		_check_boss_phase_transition(current)
+
+func _check_boss_phase_transition(current_hp: int) -> void:
+	"""Verifica se o boss deve mudar de fase baseado no HP atual"""
+	if not boss_data or boss_data.phases.is_empty():
+		return
+
+	var new_phase_index = boss_data.get_phase_index(current_hp)
+
+	# Se mudou de fase
+	if new_phase_index != current_boss_phase_index and new_phase_index >= 0:
+		var old_phase_index = current_boss_phase_index
+		current_boss_phase_index = new_phase_index
+		_transition_boss_phase(old_phase_index, new_phase_index)
+
+func _transition_boss_phase(old_index: int, new_index: int) -> void:
+	"""Aplica a transição de fase do boss"""
+	if new_index >= boss_data.phases.size():
+		return
+
+	var new_phase = boss_data.phases[new_index]
+
+	print("🔥 TRANSIÇÃO DE FASE: %s → %s" % [boss_data.phases[old_index].phase_name if old_index < boss_data.phases.size() else "???", new_phase.phase_name])
+	print("   %s" % new_phase.phase_description)
+
+	# Atualizar stats da AI do inimigo
+	if enemy and enemy.enemy_ai:
+		var enemy_ai = enemy.enemy_ai
+
+		# Atualizar dados de ataque
+		if enemy_ai.has_method("update_attack_stats"):
+			enemy_ai.update_attack_stats(
+				new_phase.min_damage,
+				new_phase.max_damage,
+				new_phase.block_amount
+			)
+
+		# Atualizar pesos de IA
+		if enemy_ai.has_method("update_ai_weights"):
+			enemy_ai.update_ai_weights(
+				new_phase.attack_weight,
+				new_phase.defend_weight,
+				new_phase.special_ability_weight if new_phase.has("special_ability_weight") else 0
+			)
+
+		# Atualizar habilidades especiais
+		if enemy_ai.has_method("update_special_abilities"):
+			enemy_ai.update_special_abilities({
+				"can_apply_strength": new_phase.can_apply_strength,
+				"strength_amount": new_phase.strength_amount,
+				"can_apply_weakness": new_phase.can_apply_weakness,
+				"weakness_amount": new_phase.weakness_amount,
+				"can_apply_vulnerable": new_phase.can_apply_vulnerable,
+				"vulnerable_amount": new_phase.vulnerable_amount,
+				"can_multi_attack": new_phase.can_multi_attack,
+				"multi_attack_count": new_phase.multi_attack_count
+			})
+
+	# TODO: Adicionar efeito visual de transição de fase
+	# TODO: Mostrar popup com descrição da nova fase
 
 func _on_enemy_died() -> void:
 	print("Inimigo morreu! Vitória!")

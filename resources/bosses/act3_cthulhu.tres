@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/cthulhu_phase1.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/cthulhu_phase2.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/cthulhu_phase3.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+boss_name = "Cthulhu, O Sonhador de R'lyeh"
+max_health = 250
+boss_lore = "O Grande Antigo. A encarnação do horror cósmico. Sua mera presença corrói a sanidade. Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn."
+phases = Array[Resource]([ExtResource("2"), ExtResource("3"), ExtResource("4")])

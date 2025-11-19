@@ -20,6 +20,10 @@ var nodes_cleared: int = 0
 var current_map_nodes: Array[MapNodeData] = []  # Estado atual do mapa
 var current_act: int = 1
 
+# Boss fight
+var is_boss_fight: bool = false
+var current_boss: Resource = null  # BossData resource
+
 signal health_changed(current: int, maximum: int)
 signal gold_changed(amount: int)
 signal deck_changed

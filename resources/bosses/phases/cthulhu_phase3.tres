@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BossPhase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_phase.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+phase_name = "O FIM DE TUDO"
+hp_threshold = 0.33
+phase_description = "A FORMA FINAL! Cthulhu transcende a realidade física! Não há escapatória! NÃO HÁ ESPERANÇA! PH'NGLUI MGLW'NAFH CTHULHU R'LYEH WGAH'NAGL FHTAGN!"
+min_damage = 10
+max_damage = 15
+block_amount = 8
+attack_weight = 60
+defend_weight = 0
+special_ability_weight = 40
+can_apply_strength = true
+strength_amount = 5
+can_apply_weakness = true
+weakness_amount = 4
+can_apply_vulnerable = true
+vulnerable_amount = 4
+can_multi_attack = true
+multi_attack_count = 4
+special_ability_name = "ANIQUILAÇÃO CÓSMICA"
+special_ability_description = "ATACA 4 VEZES! FORÇA MÁXIMA! DEBUFFS DEVASTADORES!"

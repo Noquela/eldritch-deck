@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BossPhase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_phase.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+phase_name = "Emergência das Profundezas"
+hp_threshold = 1.0
+phase_description = "Dagon emerge lentamente, testando sua presa com ataques calculados..."
+min_damage = 8
+max_damage = 12
+block_amount = 12
+attack_weight = 50
+defend_weight = 40
+special_ability_weight = 10
+can_apply_strength = false
+strength_amount = 0
+can_apply_weakness = false
+weakness_amount = 0
+can_apply_vulnerable = true
+vulnerable_amount = 1
+can_multi_attack = false
+multi_attack_count = 2
+special_ability_name = "Olhar Abissal"
+special_ability_description = "Torna o jogador Vulnerável"

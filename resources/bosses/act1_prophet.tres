@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/prophet_phase1.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/prophet_phase2.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+boss_name = "Profeta Degenerado"
+max_health = 120
+boss_lore = "Um cultista que se entregou totalmente aos sussurros do abismo. Seus olhos vazios refletem horrores além da compreensão."
+phases = Array[Resource]([ExtResource("2"), ExtResource("3")])

@@ -106,15 +106,34 @@ func _on_node_clicked(node_data: MapNodeData) -> void:
 func _navigate_to_node(node_data: MapNodeData) -> void:
 	match node_data.node_type:
 		MapNodeData.NodeType.COMBAT:
+			GameState.is_boss_fight = false
+			GameState.current_boss = null
 			get_tree().change_scene_to_file("res://scenes/combat/combat.tscn")
 		MapNodeData.NodeType.ELITE:
 			# TODO: Combate elite (inimigos mais fortes)
+			GameState.is_boss_fight = false
+			GameState.current_boss = null
 			get_tree().change_scene_to_file("res://scenes/combat/combat.tscn")
 		MapNodeData.NodeType.SHOP:
 			get_tree().change_scene_to_file("res://scenes/shop/shop.tscn")
 		MapNodeData.NodeType.CAMPFIRE:
 			get_tree().change_scene_to_file("res://scenes/campfire/campfire.tscn")
 		MapNodeData.NodeType.BOSS:
-			# TODO: Combate boss
-			print("⚠ Boss ainda não implementado!")
+			# Preparar boss fight baseado no Act atual
+			GameState.is_boss_fight = true
+			GameState.current_boss = _get_boss_for_act(GameState.current_act)
+			print("🔥 Preparando Boss Fight: %s" % GameState.current_boss.boss_name)
 			get_tree().change_scene_to_file("res://scenes/combat/combat.tscn")
+
+func _get_boss_for_act(act: int) -> Resource:
+	"""Retorna o boss apropriado para o Act atual"""
+	match act:
+		1:
+			return preload("res://resources/bosses/act1_prophet.tres")
+		2:
+			return preload("res://resources/bosses/act2_dagon.tres")
+		3:
+			return preload("res://resources/bosses/act3_cthulhu.tres")
+		_:
+			# Fallback para Act 1 se algo der errado
+			return preload("res://resources/bosses/act1_prophet.tres")

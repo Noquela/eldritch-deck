@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BossPhase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_phase.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+phase_name = "Despertar do Sono Eterno"
+hp_threshold = 1.0
+phase_description = "Cthulhu desperta lentamente. Cada movimento faz a realidade tremer. Sua presença corrói sua mente..."
+min_damage = 12
+max_damage = 18
+block_amount = 15
+attack_weight = 50
+defend_weight = 30
+special_ability_weight = 20
+can_apply_strength = false
+strength_amount = 0
+can_apply_weakness = true
+weakness_amount = 2
+can_apply_vulnerable = true
+vulnerable_amount = 2
+can_multi_attack = false
+multi_attack_count = 2
+special_ability_name = "Olhar da Loucura"
+special_ability_description = "Enfraquece e torna vulnerável"

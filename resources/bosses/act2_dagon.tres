@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/dagon_phase1.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/dagon_phase2.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/bosses/phases/dagon_phase3.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+boss_name = "Dagon, Pai dos Deep Ones"
+max_health = 180
+boss_lore = "Uma criatura abissal primordial, metade peixe, metade humano. Suas escamas brilham com um verde doentio enquanto ele emerge das profundezas."
+phases = Array[Resource]([ExtResource("2"), ExtResource("3"), ExtResource("4")])

@@ -76,3 +76,41 @@ func get_action_description() -> String:
 			return "Força +%d" % next_action.strength
 		_:
 			return next_action.name
+
+# Métodos para atualizar stats durante boss phase transitions
+func update_attack_stats(new_min_damage: int, new_max_damage: int, new_block_amount: int) -> void:
+	"""Atualiza os valores de dano e bloqueio das ações"""
+	if not enemy_data:
+		return
+
+	enemy_data.min_damage = new_min_damage
+	enemy_data.max_damage = new_max_damage
+	enemy_data.block_amount = new_block_amount
+
+	# Reconstruir ações com novos valores
+	_build_actions()
+
+func update_ai_weights(new_attack_weight: int, new_defend_weight: int, new_buff_weight: int) -> void:
+	"""Atualiza os pesos de decisão da IA"""
+	if not enemy_data:
+		return
+
+	enemy_data.attack_weight = new_attack_weight
+	enemy_data.defend_weight = new_defend_weight
+	enemy_data.buff_weight = new_buff_weight
+
+	# Reconstruir ações com novos pesos
+	_build_actions()
+
+func update_special_abilities(abilities: Dictionary) -> void:
+	"""Atualiza as habilidades especiais do boss"""
+	if not enemy_data:
+		return
+
+	if abilities.has("can_apply_strength"):
+		enemy_data.can_apply_strength = abilities.can_apply_strength
+	if abilities.has("strength_amount"):
+		enemy_data.strength_amount = abilities.strength_amount
+
+	# Reconstruir ações para incluir novas habilidades
+	_build_actions()

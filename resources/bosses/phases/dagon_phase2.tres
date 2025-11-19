@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BossPhase" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_phase.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+phase_name = "Maré da Destruição"
+hp_threshold = 0.66
+phase_description = "Dagon ruge! Sua força primordial é liberada enquanto escamas brilham com poder ancestral!"
+min_damage = 10
+max_damage = 16
+block_amount = 10
+attack_weight = 65
+defend_weight = 20
+special_ability_weight = 15
+can_apply_strength = true
+strength_amount = 3
+can_apply_weakness = false
+weakness_amount = 0
+can_apply_vulnerable = true
+vulnerable_amount = 2
+can_multi_attack = false
+multi_attack_count = 2
+special_ability_name = "Rugido do Oceano"
+special_ability_description = "Ganha Força massiva"
