@@ -53,6 +53,15 @@ script = ExtResource("12_ritual")
 [node name="ArtifactManager" type="Node" parent="."]
 script = ExtResource("13_artifact")
 
+[node name="HealthLabel" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 80.0
+offset_right = 110.0
+offset_bottom = 130.0
+theme_override_font_sizes/font_size = 20
+text = "❤ VIDA"
+vertical_alignment = 1
+
 [node name="PlayerHealthBar" type="ProgressBar" parent="."]
 offset_left = 120.0
 offset_top = 80.0
@@ -61,12 +70,30 @@ offset_bottom = 130.0
 value = 100.0
 show_percentage = false
 
+[node name="CorruptionLabel" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 150.0
+offset_right = 110.0
+offset_bottom = 200.0
+theme_override_font_sizes/font_size = 18
+text = "☠ CORRUP"
+vertical_alignment = 1
+
 [node name="CorruptionBar" type="ProgressBar" parent="."]
 offset_left = 120.0
 offset_top = 150.0
 offset_right = 520.0
 offset_bottom = 200.0
 show_percentage = false
+
+[node name="SanityLabel" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 220.0
+offset_right = 110.0
+offset_bottom = 270.0
+theme_override_font_sizes/font_size = 18
+text = "🧠 SANITY"
+vertical_alignment = 1
 
 [node name="SanityBar" type="ProgressBar" parent="."]
 offset_left = 120.0
@@ -76,6 +103,15 @@ offset_bottom = 270.0
 max_value = 10.0
 value = 10.0
 show_percentage = false
+
+[node name="BlockLabel" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 290.0
+offset_right = 110.0
+offset_bottom = 340.0
+theme_override_font_sizes/font_size = 18
+text = "🛡 BLOCK"
+vertical_alignment = 1
 
 [node name="BlockBar" type="ProgressBar" parent="."]
 offset_left = 120.0

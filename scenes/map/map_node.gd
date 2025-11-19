@@ -4,7 +4,7 @@ signal node_clicked(node_data: MapNodeData)
 
 @onready var button: Button = $Button
 @onready var icon_label: Label = $Button/IconLabel
-@onready var type_label: Label = $TypeLabel
+@onready var type_label: Label = $Button/TypeLabel
 
 var node_data: MapNodeData
 
