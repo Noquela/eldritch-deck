@@ -38,7 +38,7 @@ var enemy_types: Array[Resource] = [
 
 # Boss fight support
 var is_boss_fight: bool = false
-var boss_data: BossData = null
+var boss_data: Resource = null  # BossData resource
 var current_boss_phase_index: int = 0
 
 func _ready() -> void:

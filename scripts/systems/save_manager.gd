@@ -1,5 +1,5 @@
 extends Node
-class_name SaveManager
+# Singleton - não precisa de class_name pois é autoload
 
 const API_URL = "http://localhost:3000/api"
 const DEFAULT_SAVE_NAME = "save_1"
