@@ -14,6 +14,10 @@ var gold: int:
 	get: return player_gold
 	set(value): player_gold = value
 
+var player_health: int:
+	get: return player_current_health
+	set(value): player_current_health = value
+
 # Progresso no mapa
 var current_floor: int = 1
 var nodes_cleared: int = 0
@@ -23,6 +27,9 @@ var current_act: int = 1
 # Boss fight
 var is_boss_fight: bool = false
 var current_boss: Resource = null  # BossData resource
+
+# Elite fight
+var is_elite_fight: bool = false
 
 signal health_changed(current: int, maximum: int)
 signal gold_changed(amount: int)
@@ -99,9 +106,15 @@ func heal(amount: int) -> void:
 
 func reset_run() -> void:
 	player_current_health = player_max_health
-	player_gold = 0
+	player_gold = 100  # Ouro inicial
 	current_floor = 1
+	current_act = 1
 	nodes_cleared = 0
+	is_boss_fight = false
+	is_elite_fight = false
+	current_boss = null
+	player_artifacts.clear()
+	current_map_nodes.clear()
 	_initialize_starting_deck()
 	health_changed.emit(player_current_health, player_max_health)
 	gold_changed.emit(player_gold)
